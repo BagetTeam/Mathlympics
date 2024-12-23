@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'global_styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,10 +29,11 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Mathlympics'),
     );
   }
 }
@@ -41,7 +43,7 @@ class MyHomePage extends StatefulWidget {
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  // how it looks
 
   // This class is the configuration for the state. It holds the values (in this
   // case the title) provided by the parent (in this case the App widget) and
