@@ -12,5 +12,14 @@ const globalStyles = (
     quart: Color(0xFF03045e),
     accent: Color(0xFFff8443),
   ),
-  font: (size: 16.0)
+  font: (
+    size: 16.0,
+    title: TextStyle(
+      fontSize: 32, // Set the font size
+      fontFamily:
+          'Roboto', // Change the font (use any font available in your app)
+      fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    )
+  )
 );
