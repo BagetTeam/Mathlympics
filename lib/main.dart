@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mathlympics/leaderboard.dart';
 import 'global_styles.dart';
 import 'home.dart';
 
@@ -18,7 +19,15 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
         useMaterial3: true,
       ),
-      home: const Home(title: 'Mathlympics'),
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const Home(
+              title: 'Mathlympics',
+              user_level: 0,
+              user_xp: 0,
+            ),
+        '/leaderboard': (context) => const Leaderboard(user_id: 0)
+      },
     );
   }
 }

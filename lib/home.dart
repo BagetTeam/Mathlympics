@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
+import 'package:mathlympics/leaderboard.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
+class Home extends StatelessWidget {
+  const Home({
+    super.key,
+    required this.title,
+    required this.user_level,
+    required this.user_xp,
+  });
   final String title;
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  int counter = 0;
-
-  void incrementCounter() {
-    setState(() {
-      counter++;
-    });
-  }
+  final int user_level;
+  final int user_xp;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +35,7 @@ class _HomeState extends State<Home> {
               height: 80,
               child: Center(
                 child: Text(
-                  widget.title,
+                  title,
                   style: globalStyles.font.title,
                 ),
               ),
@@ -51,24 +46,25 @@ class _HomeState extends State<Home> {
                         WidgetStateProperty.all(globalStyles.colors.primary),
                     foregroundColor:
                         WidgetStateProperty.all(globalStyles.colors.black)),
-                onPressed: incrementCounter,
-                child: Text("Play $counter")),
+                onPressed: () {},
+                child: Text("Play")),
             FilledButton.tonal(
                 style: buttonStyle.copyWith(
                     backgroundColor:
                         WidgetStateProperty.all(globalStyles.colors.accent),
                     foregroundColor:
                         WidgetStateProperty.all(globalStyles.colors.black)),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/leaderboard');
+                },
                 child: const Text("Leaderboard")),
             FilledButton.tonal(
-                style: buttonStyle,
-                // style: buttonStyle.copyWith(
-                //     backgroundColor:
-                //         WidgetStateProperty.all(globalStyles.colors.accent),
-                //     foregroundColor:
-                //         WidgetStateProperty.all(globalStyles.colors.black)),
-                onPressed: null,
+                style: buttonStyle.copyWith(
+                    backgroundColor:
+                        WidgetStateProperty.all(globalStyles.colors.secondary),
+                    foregroundColor:
+                        WidgetStateProperty.all(globalStyles.colors.black)),
+                onPressed: () {},
                 child: const Text("Shop")),
             FilledButton(
                 style: buttonStyle,
