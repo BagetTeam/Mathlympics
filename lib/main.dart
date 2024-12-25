@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mathlympics/leaderboard.dart';
 import 'global_styles.dart';
 import 'home.dart';
+import 'logos.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,10 +22,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       routes: {
-        '/home': (context) => const Home(
+        '/home': (context) => Home(
               title: 'Mathlympics',
               user_level: 0,
               user_xp: 0,
+              logo: Logos.appLogo(),
             ),
         '/leaderboard': (context) => const Leaderboard(user_id: 0)
       },

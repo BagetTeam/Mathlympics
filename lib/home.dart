@@ -8,10 +8,12 @@ class Home extends StatelessWidget {
     required this.title,
     required this.user_level,
     required this.user_xp,
+    this.logo = const SizedBox.shrink(),
   });
   final String title;
   final int user_level;
   final int user_xp;
+  final Widget logo;
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +23,13 @@ class Home extends StatelessWidget {
           WidgetStateProperty.all(TextStyle(fontSize: globalStyles.font.size)),
     );
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: globalStyles.colors.white,
-      //   title: Center(
-      //     child: Text(widget.title),
-      //   ),
-      // ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 80,
-              child: Center(
-                child: Text(
-                  title,
-                  style: globalStyles.font.title,
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: logo,
             ),
             FilledButton.tonal(
                 style: buttonStyle.copyWith(
