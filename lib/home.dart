@@ -19,6 +19,13 @@ class Home extends StatelessWidget {
       fixedSize: WidgetStateProperty.all(Size(500, 35)),
       textStyle:
           WidgetStateProperty.all(TextStyle(fontSize: globalStyles.font.size)),
+      padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+      ),
     );
     return Scaffold(
       // appBar: AppBar(
@@ -46,7 +53,9 @@ class Home extends StatelessWidget {
                         WidgetStateProperty.all(globalStyles.colors.primary),
                     foregroundColor:
                         WidgetStateProperty.all(globalStyles.colors.black)),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/play');
+                },
                 child: Text("Play")),
             FilledButton.tonal(
                 style: buttonStyle.copyWith(

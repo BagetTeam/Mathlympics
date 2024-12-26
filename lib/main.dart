@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mathlympics/leaderboard.dart';
+import 'package:mathlympics/normal_game_screen.dart';
+import 'package:mathlympics/play_screen.dart';
 import 'global_styles.dart';
 import 'home.dart';
 
@@ -19,14 +21,18 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
         useMaterial3: true,
       ),
-      initialRoute: '/home',
+      initialRoute: '/',
       routes: {
-        '/home': (context) => const Home(
+        '/': (context) => const Home(
               title: 'Mathlympics',
               user_level: 0,
               user_xp: 0,
             ),
-        '/leaderboard': (context) => const Leaderboard(user_id: 0)
+        '/leaderboard': (context) => const Leaderboard(user_id: 0),
+        '/play': (context) => const PlayScreen(),
+        '/play/normal': (context) => const PlayNormal(),
+        '/play/ranked': (context) => const PlayRanked(),
+        '/play/normal/cal20': (context) => const NormalGameScreen(),
       },
     );
   }
