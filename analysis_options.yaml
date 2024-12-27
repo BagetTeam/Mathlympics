@@ -26,5 +26,9 @@ linter:
     - discarded_futures
     - unawaited_futures
 
+analyzer:
+  plugins:
+    - custom_lint
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
