@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mathlympics-d810f",
+          "appId": "1:684663276859:android:ae34e51c7bcda087c2e31e",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mathlympics-d810f",
+          "configurations": {
+            "android": "1:684663276859:android:ae34e51c7bcda087c2e31e"
+          }
+        }
+      }
+    }
+  }
+}
+
