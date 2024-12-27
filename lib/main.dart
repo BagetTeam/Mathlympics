@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mathlympics/leaderboard.dart';
 import 'package:mathlympics/normal_game_screen.dart';
 import 'package:mathlympics/play_screen.dart';
@@ -6,6 +7,9 @@ import 'global_styles.dart';
 import 'home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   runApp(const MyApp());
 }
 
