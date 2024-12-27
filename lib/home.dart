@@ -7,10 +7,12 @@ class Home extends StatelessWidget {
     required this.title,
     required this.user_level,
     required this.user_xp,
+    this.logo = const SizedBox.shrink(),
   });
   final String title;
   final int user_level;
   final int user_xp;
+  final Widget logo;
 
   @override
   Widget build(BuildContext context) {

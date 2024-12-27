@@ -5,6 +5,7 @@ import 'package:mathlympics/normal_game_screen.dart';
 import 'package:mathlympics/play_screen.dart';
 import 'global_styles.dart';
 import 'home.dart';
+import 'logos.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +28,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const Home(
+        '/': (context) => Home(
               title: 'Mathlympics',
               user_level: 0,
               user_xp: 0,
+              logo: Logos.appLogo(),
             ),
         '/leaderboard': (context) => const Leaderboard(user_id: 0),
         '/play': (context) => const PlayScreen(),

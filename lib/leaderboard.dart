@@ -41,19 +41,21 @@ class Leaderboard extends StatelessWidget {
           children: <Widget>[
             ListView.builder(
               itemCount: 25,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (BuildContext context, index) {
+                final int displayIndex = index + 1;
                 return ListTile(
-                  tileColor: index.isOdd ? oddItemColor : evenItemColor,
-                  title: Text('${titles[0]} $index'),
+                  tileColor: displayIndex.isOdd ? oddItemColor : evenItemColor,
+                  title: Text('${titles[0]} $displayIndex'),
                 );
               },
             ),
             ListView.builder(
               itemCount: 25,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (BuildContext context, index) {
+                final int displayIndex = index + 1;
                 return ListTile(
-                  tileColor: index.isOdd ? oddItemColor : evenItemColor,
-                  title: Text('${titles[1]} $index'),
+                  tileColor: displayIndex.isOdd ? oddItemColor : evenItemColor,
+                  title: Text('${titles[1]} $displayIndex'),
                 );
               },
             ),
