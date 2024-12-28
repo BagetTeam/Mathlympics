@@ -9,10 +9,17 @@ import 'global_styles.dart';
 import 'home.dart';
 import 'firebase_options.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> setUp() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+      overlays: []);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setUp();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -45,6 +52,8 @@ class MyApp extends StatelessWidget {
         '/play/normal/cal20': (context) => const NormalGameScreen(),
         '/login': (context) => const LoginPage(),
         '/signin': (context) => const LoginPage(), // TODO: replace by signin
+        '/account': (context) => const LoginPage(), // TODO: replace by account
+        '/shop': (context) => const LoginPage(), // TODO: replace by shop
       },
     );
   }
