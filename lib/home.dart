@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
 
@@ -5,29 +6,41 @@ class Home extends StatelessWidget {
   const Home({
     super.key,
     required this.title,
-    required this.user_level,
-    required this.user_xp,
+    required this.userLevel,
+    required this.userXp,
     this.logo = const SizedBox.shrink(),
   });
   final String title;
-  final int user_level;
-  final int user_xp;
+  final int userLevel;
+  final int userXp;
   final Widget logo;
 
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ButtonStyle(
-      fixedSize: WidgetStateProperty.all(Size(500, 35)),
-      textStyle:
-          WidgetStateProperty.all(TextStyle(fontSize: globalStyles.font.size)),
-      padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+        fixedSize: WidgetStateProperty.all(Size(500, 35)),
+        textStyle: WidgetStateProperty.all(globalStyles.font.button),
+        padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
-      ),
-    );
+        backgroundColor: WidgetStatePropertyAll(Colors.transparent));
+
+    VoidCallback handleClick(String path) {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        path = "/login";
+      }
+
+      return () async {
+        await Navigator.pushNamed(context, path);
+      };
+    }
+
     return Scaffold(
       body: Row(
         children: <Widget>[
@@ -47,6 +60,7 @@ class Home extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
+                        margin: EdgeInsets.only(bottom: 10),
                         width: constraints.maxWidth * 0.25,
                         child: Image.asset(
                           'assets/images/main_logo.png',
@@ -55,15 +69,23 @@ class Home extends StatelessWidget {
                       ),
                       Text(
                         "NanoScience",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                        style: globalStyles.font.header,
                       ),
-                      Text("Level 999"),
+                      Text(
+                        "Level $userLevel",
+                        style: globalStyles.font.normal,
+                      ),
                       SizedBox(
                         height: constraints.maxHeight * 0.15,
                       ),
-                      Text("Total Wins: 999999999"),
-                      Text("Global Rank: #1"),
+                      Text(
+                        "Total Wins: 999999999",
+                        style: globalStyles.font.normal,
+                      ),
+                      Text(
+                        "Global Rank: #1",
+                        style: globalStyles.font.normal,
+                      ),
                       SizedBox(
                         height: constraints.maxHeight * 0.15,
                       ),
@@ -93,28 +115,29 @@ class Home extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          globalStyles.colors.green,
-                          const Color.fromARGB(255, 103, 245, 217),
-                          globalStyles.colors.primary,
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                        gradient: LinearGradient(
+                          colors: [
+                            globalStyles.colors.primary,
+                            globalStyles.colors.secondary,
+                            const Color.fromARGB(255, 28, 115, 255),
+                          ],
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color.fromARGB(125, 0, 0, 0),
+                              offset: Offset(1, 4),
+                              blurRadius: 5,
+                              blurStyle: BlurStyle.inner)
+                        ]),
                     child: FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                        backgroundColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        foregroundColor:
-                            WidgetStateProperty.all(globalStyles.colors.black),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/play');
+                      style: buttonStyle,
+                      onPressed: () async {
+                        await Navigator.pushNamed(context, '/play');
                       },
-                      child: Text("Play"),
+                      child: Text("Play", style: globalStyles.font.button),
                     ),
                   ),
                   Container(
@@ -132,16 +155,14 @@ class Home extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                        backgroundColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        foregroundColor:
-                            WidgetStateProperty.all(globalStyles.colors.black),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/leaderboard');
+                      style: buttonStyle,
+                      onPressed: () async {
+                        await Navigator.pushNamed(context, '/leaderboard');
                       },
-                      child: const Text("Leaderboard"),
+                      child: Text(
+                        "Leaderboard",
+                        style: globalStyles.font.button,
+                      ),
                     ),
                   ),
                   Container(
@@ -159,14 +180,13 @@ class Home extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                        backgroundColor:
-                            WidgetStateProperty.all(Colors.transparent),
-                        foregroundColor:
-                            WidgetStateProperty.all(globalStyles.colors.black),
-                      ),
+                      style: buttonStyle,
+                      //TODO add nav when shop is made
                       onPressed: () {},
-                      child: const Text("Shop"),
+                      child: Text(
+                        "Shop",
+                        style: globalStyles.font.button,
+                      ),
                     ),
                   ),
                   SizedBox(
