@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
 
 class Leaderboard extends StatelessWidget {
-  const Leaderboard({super.key, required this.user_id});
-  final int user_id;
+  const Leaderboard({super.key, required this.userId});
+  final int userId;
 
   @override
   Widget build(BuildContext context) {
