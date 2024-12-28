@@ -16,8 +16,8 @@ class PlayScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/play/normal');
+                onPressed: () async {
+                  await Navigator.pushNamed(context, '/play/normal');
                 },
                 child: Text("Normal")),
             FilledButton(onPressed: () {}, child: Text("Ranked")),
@@ -44,8 +44,8 @@ class PlayNormal extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/play/normal/cal20');
+                onPressed: () async {
+                  await Navigator.pushNamed(context, '/play/normal/cal20');
                 },
                 child: Text("Calculation x20")),
             FilledButton(onPressed: () {}, child: Text("Integrals")),
