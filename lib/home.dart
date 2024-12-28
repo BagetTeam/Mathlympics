@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
 
@@ -5,13 +6,13 @@ class Home extends StatelessWidget {
   const Home({
     super.key,
     required this.title,
-    required this.user_level,
-    required this.user_xp,
+    required this.userLevel,
+    required this.userXp,
     this.logo = const SizedBox.shrink(),
   });
   final String title;
-  final int user_level;
-  final int user_xp;
+  final int userLevel;
+  final int userXp;
   final Widget logo;
 
   @override
@@ -28,6 +29,19 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+
+    VoidCallback handleClick(String path) {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        path = "/login";
+      }
+
+      return () async {
+        await Navigator.pushNamed(context, path);
+      };
+    }
+
     return Scaffold(
       body: Row(
         children: <Widget>[
@@ -74,9 +88,7 @@ class Home extends StatelessWidget {
                               globalStyles.colors.primary),
                           foregroundColor: WidgetStateProperty.all(
                               globalStyles.colors.black)),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/play');
-                      },
+                      onPressed: handleClick("play"),
                       child: Text("Play")),
                   FilledButton.tonal(
                       style: buttonStyle.copyWith(
@@ -84,9 +96,7 @@ class Home extends StatelessWidget {
                               globalStyles.colors.accent),
                           foregroundColor: WidgetStateProperty.all(
                               globalStyles.colors.black)),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/leaderboard');
-                      },
+                      onPressed: handleClick('/leaderboard'),
                       child: const Text("Leaderboard")),
                   FilledButton.tonal(
                       style: buttonStyle.copyWith(
@@ -94,15 +104,16 @@ class Home extends StatelessWidget {
                               globalStyles.colors.secondary),
                           foregroundColor: WidgetStateProperty.all(
                               globalStyles.colors.black)),
-                      onPressed: () {},
+                      // FIX: uncomment this after adding the path
+                      // onPressed: handleClick('/shop'),
+                      onPressed: null,
                       child: const Text("Shop")),
                   FilledButton(
                       style: buttonStyle,
+                      // FIX: uncomment this after adding the path
+                      // onPressed: handleClick('/account'),
                       onPressed: null,
                       child: const Text("Account")),
-                  SizedBox(
-                    height: 50,
-                  )
                 ],
               ),
             ),
