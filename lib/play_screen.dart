@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mathlympics/global_styles.dart';
 
 class PlayScreen extends StatelessWidget {
   const PlayScreen({
@@ -36,25 +37,42 @@ class PlayNormal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Play'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/play/normal/cal20');
-                },
-                child: Text("Calculation x20")),
-            FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/play/normal/integrals');
-                },
-                child: Text("Integrals")),
-          ],
-        ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 10,
+            left: 10,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.black87),
+                  onPressed: () => Navigator.popAndPushNamed(context, '/'),
+                ),
+                Text(
+                  'Quick Play',
+                  style: globalStyles.font.header,
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FilledButton(
+                    onPressed: () async {
+                      await Navigator.pushNamed(context, '/normal/cal20');
+                    },
+                    child: Text("Calculation x20")),
+                FilledButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/play/normal/integrals');
+                    },
+                    child: Text("Integrals")),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -67,6 +85,6 @@ class PlayRanked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return Text("data");
   }
 }

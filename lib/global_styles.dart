@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 const globalStyles = (
   colors: (
-    green: Color.fromARGB(255, 102, 222, 22),
+    green: Color.fromARGB(213, 119, 255, 1),
+    green2: Color.fromARGB(255, 39, 222, 22),
+    green3: Color.fromARGB(255, 22, 222, 89),
     red: Color(0xFFd50000),
     red2: Color.fromARGB(255, 255, 49, 111),
     red3: Color.fromARGB(255, 255, 110, 134),
@@ -66,6 +68,14 @@ const globalStyles = (
     // ),
     normal: TextStyle(
       fontSize: 14.0, // Set the font size
+      fontFamily:
+          'Acme', // Change the font (use any font available in your app)
+      fontWeight: FontWeight.w600, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
+    equations: TextStyle(
+      fontSize: 30.0, // Set the font size
+      letterSpacing: 5,
       fontFamily:
           'Acme', // Change the font (use any font available in your app)
       fontWeight: FontWeight.w600, // Optional: Adjust font weight

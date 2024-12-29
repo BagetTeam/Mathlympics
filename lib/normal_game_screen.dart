@@ -112,8 +112,8 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                   ),
                   Text(
                     widget.isIntegral
-                        ? eq_integrals[idx + 3]
-                        : eq_arithmetics[idx + 3],
+                          ? eq_integrals[idx + 3]
+                          : eq_arithmetics[idx + 3],
                     style: TextStyle(fontSize: 24, color: Colors.black87),
                   ),
                 ],
@@ -121,88 +121,109 @@ class _NormalGameScreen extends State<NormalGameScreen> {
             ),
           ),
 
-          Container(
-            width: 2,
-            color: Colors.blue,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-          ),
-
-          //writting side ---------------------------
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  //writting container
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: globalStyles.colors.primary,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return GestureDetector(
-                              onPanStart: (details) {
-                                final point = details.localPosition;
-                                if (isPointWithinBounds(
-                                    point, constraints.biggest)) {
-                                  setState(() {
-                                    lines.add([point]);
-                                  });
-                                }
-                              },
-                              onPanUpdate: (details) {
-                                final point = details.localPosition;
-                                if (isPointWithinBounds(
-                                        point, constraints.biggest) &&
-                                    lines.isNotEmpty) {
-                                  setState(() {
-                                    lines.last.add(point);
-                                  });
-                                }
-                              },
-                              child: CustomPaint(
-                                size: Size.infinite,
-                                painter: DrawingPainter(lines: lines),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  //erase button
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        lines.clear();
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: globalStyles.colors.secondary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                    child: const Text(
-                      'Erase',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white, //or black idk what u guys prefer
-                      ),
-                    ),
-                  ),
-                ],
+              Container(
+                width: 2,
+                color: Colors.blue,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
               ),
+
+              //writting side ---------------------------
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      //writting container
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: globalStyles.colors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return GestureDetector(
+                                  onPanStart: (details) {
+                                    final point = details.localPosition;
+                                    if (isPointWithinBounds(
+                                        point, constraints.biggest)) {
+                                      setState(() {
+                                        lines.add([point]);
+                                      });
+                                    }
+                                  },
+                                  onPanUpdate: (details) {
+                                    final point = details.localPosition;
+                                    if (isPointWithinBounds(
+                                            point, constraints.biggest) &&
+                                        lines.isNotEmpty) {
+                                      setState(() {
+                                        lines.last.add(point);
+                                      });
+                                    }
+                                  },
+                                  child: CustomPaint(
+                                    size: Size.infinite,
+                                    painter: DrawingPainter(lines: lines),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      //erase button
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            lines.clear();
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: globalStyles.colors.secondary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 15,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                        child: const Text(
+                          'Erase',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color:
+                                Colors.white, //or black idk what u guys prefer
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          //button to exit
+          Positioned(
+            top: 10,
+            left: 10,
+            child: Row(
+              children: [
+                IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.black87),
+                    onPressed: () async {
+                      await Navigator.popAndPushNamed(context, '/normal');
+                    }),
+                Text(
+                  'Quit',
+                  style: globalStyles.font.header,
+                ),
+              ],
             ),
           ),
         ],

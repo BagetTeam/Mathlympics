@@ -53,10 +53,10 @@ class MyApp extends StatelessWidget {
             ),
         '/leaderboard': (context) => const Leaderboard(userId: 0),
         '/play': (context) => const PlayScreen(),
-        '/play/normal': (context) => const PlayNormal(),
-        '/play/ranked': (context) => const PlayRanked(),
-        '/play/normal/cal20': (context) => const NormalGameScreen(),
-        '/play/normal/integrals': (context) =>
+        '/normal': (context) => const PlayNormal(),
+        '/ranked': (context) => const PlayRanked(),
+        '/normal/cal20': (context) => const NormalGameScreen(),
+        '/normal/integrals': (context) =>
             const NormalGameScreen(isIntegral: true),
         '/login': (context) => const LoginPage(),
         '/game-over': (context) => const GameOverScreen(),

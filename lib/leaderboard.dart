@@ -18,7 +18,7 @@ class Leaderboard extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('AppBar Sample'),
+          title: const Text('Leaderboard'),
           notificationPredicate: (ScrollNotification notification) {
             return notification.depth == 1;
           },
