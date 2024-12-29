@@ -9,10 +9,14 @@ import 'global_styles.dart';
 import 'home.dart';
 import 'logos.dart';
 import 'firebase_options.dart';
+import 'game_over_screen.dart';
 
+/// Sets up the preferred device orientations and system UI mode.
 Future<void> setUp() async {
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
       overlays: []);
@@ -52,7 +56,10 @@ class MyApp extends StatelessWidget {
         '/play/normal': (context) => const PlayNormal(),
         '/play/ranked': (context) => const PlayRanked(),
         '/play/normal/cal20': (context) => const NormalGameScreen(),
+        '/play/normal/integrals': (context) =>
+            const NormalGameScreen(isIntegral: true),
         '/login': (context) => const LoginPage(),
+        '/game-over': (context) => const GameOverScreen(),
         '/signin': (context) => const LoginPage(), // TODO: replace by signin
         '/account': (context) => const LoginPage(), // TODO: replace by account
         '/shop': (context) => const LoginPage(), // TODO: replace by shop

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
+import 'package:mathlympics/game_over_screen.dart';
 
 class NormalGameScreen extends StatefulWidget {
-  const NormalGameScreen({super.key});
-  @override
+  const NormalGameScreen({super.key, this.isIntegral = false});
+  final bool isIntegral;
   State<StatefulWidget> createState() => _NormalGameScreen();
 }
 
 class _NormalGameScreen extends State<NormalGameScreen> {
   List<List<Offset>> lines = [];
-  List<String> eq = [
+  List<String> eq_arithmetics = [
     "", //keep this
     "", //keep this
     "420 / 69 = __",
@@ -20,8 +21,32 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "5 x 5 = __",
     "7 x 7 = __",
     "10 + 11 = __",
+    "BOY YOU STUPID HOW DID YOU GET THIS WRONG",
     "" //keep this
   ];
+
+  List<String> eq_integrals = [
+    "", //keep this
+    "", //keep this
+    "∫ 2x dx = __",
+    "∫ 3x dx = __",
+    "∫ 4x dx = __",
+    "∫ 5x dx = __",
+    "∫ 6x dx = __",
+    "∫ 7x dx = __",
+    "∫ 8x dx = __",
+    "∫ 9x dx = __",
+    "∫ 10x dx = __",
+    "∫ sin(x) dx = __",
+    "∫ cos(x) dx = __",
+    "∫ e^x dx = __",
+    "∫ 1/x dx = __",
+    "∫ ln(x) dx = __",
+    "∫ tan(x) dx = __",
+    "∫ sec(x) dx = __",
+    "" //keep this
+  ];
+
   int idx = 0;
 
   // check bounds of drawing
@@ -35,8 +60,12 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   void equationIndexIncrement() {
     setState(() {
       idx++;
-      if (idx >= eq.length - 3) {
+      if (idx >=
+          (widget.isIntegral
+              ? eq_integrals.length - 3
+              : eq_arithmetics.length - 3)) {
         idx = 0;
+        Navigator.pushNamed(context, '/game-over');
         //should finish the game
       }
     });
@@ -57,11 +86,13 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    eq[idx],
+                    widget.isIntegral ? eq_integrals[idx] : eq_arithmetics[idx],
                     style: TextStyle(fontSize: 24, color: Colors.black87),
                   ),
                   Text(
-                    eq[idx + 1],
+                    widget.isIntegral
+                        ? eq_integrals[idx + 1]
+                        : eq_arithmetics[idx + 1],
                     style: TextStyle(fontSize: 24, color: Colors.black87),
                   ),
                   //highlighted equation
@@ -73,12 +104,16 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      eq[idx + 2],
+                      widget.isIntegral
+                          ? eq_integrals[idx + 2]
+                          : eq_arithmetics[idx + 2],
                       style: TextStyle(fontSize: 24, color: Colors.black87),
                     ),
                   ),
                   Text(
-                    eq[idx + 3],
+                    widget.isIntegral
+                        ? eq_integrals[idx + 3]
+                        : eq_arithmetics[idx + 3],
                     style: TextStyle(fontSize: 24, color: Colors.black87),
                   ),
                 ],

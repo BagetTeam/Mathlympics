@@ -48,7 +48,11 @@ class PlayNormal extends StatelessWidget {
                   Navigator.pushNamed(context, '/play/normal/cal20');
                 },
                 child: Text("Calculation x20")),
-            FilledButton(onPressed: () {}, child: Text("Integrals")),
+            FilledButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/play/normal/integrals');
+                },
+                child: Text("Integrals")),
           ],
         ),
       ),
