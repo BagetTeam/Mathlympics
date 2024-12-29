@@ -59,10 +59,20 @@ class MyApp extends StatelessWidget {
         '/normal/integrals': (context) =>
             const NormalGameScreen(isIntegral: true),
         '/login': (context) => const LoginPage(),
-        '/game-over': (context) => const GameOverScreen(),
         '/signin': (context) => const LoginPage(), // TODO: replace by signin
         '/account': (context) => const LoginPage(), // TODO: replace by account
         '/shop': (context) => const LoginPage(), // TODO: replace by shop
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/game-over') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) {
+              return GameOverScreen(finalTime: args['finalTime']);
+            },
+          );
+        }
+        return null;
       },
     );
   }

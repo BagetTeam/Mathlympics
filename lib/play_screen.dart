@@ -18,7 +18,7 @@ class PlayScreen extends StatelessWidget {
           children: [
             FilledButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/play/normal');
+                  Navigator.pushNamed(context, '/normal');
                 },
                 child: Text("Normal")),
             FilledButton(onPressed: () {}, child: Text("Ranked")),
@@ -66,7 +66,7 @@ class PlayNormal extends StatelessWidget {
                     child: Text("Calculation x20")),
                 FilledButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/play/normal/integrals');
+                      Navigator.pushNamed(context, '/normal/integrals');
                     },
                     child: Text("Integrals")),
               ],

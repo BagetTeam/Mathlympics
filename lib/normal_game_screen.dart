@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
-import 'package:mathlympics/game_over_screen.dart';
+import 'dart:async';
 
 class NormalGameScreen extends StatefulWidget {
   const NormalGameScreen({super.key, this.isIntegral = false});
@@ -47,7 +47,30 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "" //keep this
   ];
 
+  Timer? _timer;
+  double _time = 0;
   int idx = 0;
+  double finalTime = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    startChronometer();
+  }
+
+  void startChronometer() {
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _time = double.parse((_time + 0.10).toStringAsFixed(2));
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   // check bounds of drawing
   bool isPointWithinBounds(Offset point, Size size) {
@@ -65,7 +88,13 @@ class _NormalGameScreen extends State<NormalGameScreen> {
               ? eq_integrals.length - 3
               : eq_arithmetics.length - 3)) {
         idx = 0;
-        Navigator.pushNamed(context, '/game-over');
+        _timer?.cancel();
+        // Save the final time to a global variable or a service
+        // For example, using a global variable:
+        finalTime = _time;
+        Navigator.pushNamed(context, '/game-over', arguments: {
+          'finalTime': _time,
+        });
         //should finish the game
       }
     });
@@ -75,51 +104,55 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: globalStyles.colors.white,
-      body: Row(
+      body: Stack(
         children: [
-          // math questions side ------------------------------
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.isIntegral ? eq_integrals[idx] : eq_arithmetics[idx],
-                    style: TextStyle(fontSize: 24, color: Colors.black87),
+          Row(
+            children: [
+              // math questions side ------------------------------
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.isIntegral
+                            ? eq_integrals[idx]
+                            : eq_arithmetics[idx],
+                        style: globalStyles.font.equations,
+                      ),
+                      Text(
+                        widget.isIntegral
+                            ? eq_integrals[idx + 1]
+                            : eq_arithmetics[idx + 1],
+                        style: globalStyles.font.equations,
+                      ),
+                      //highlighted equation
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 157, 225,
+                              244), //maybe change to a set colour from our styles
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          widget.isIntegral
+                              ? eq_integrals[idx + 2]
+                              : eq_arithmetics[idx + 2],
+                          style: globalStyles.font.equations,
+                        ),
+                      ),
+                      Text(
+                        widget.isIntegral
+                            ? eq_integrals[idx + 3]
+                            : eq_arithmetics[idx + 3],
+                        style: globalStyles.font.equations,
+                      ),
+                    ],
                   ),
-                  Text(
-                    widget.isIntegral
-                        ? eq_integrals[idx + 1]
-                        : eq_arithmetics[idx + 1],
-                    style: TextStyle(fontSize: 24, color: Colors.black87),
-                  ),
-                  //highlighted equation
-                  Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 157, 225,
-                          244), //maybe change to a set colour from our styles
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      widget.isIntegral
-                          ? eq_integrals[idx + 2]
-                          : eq_arithmetics[idx + 2],
-                      style: TextStyle(fontSize: 24, color: Colors.black87),
-                    ),
-                  ),
-                  Text(
-                    widget.isIntegral
-                          ? eq_integrals[idx + 3]
-                          : eq_arithmetics[idx + 3],
-                    style: TextStyle(fontSize: 24, color: Colors.black87),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
 
               Container(
                 width: 2,
@@ -176,31 +209,49 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      //erase button
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            lines.clear();
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: globalStyles.colors.secondary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 15,
+                      //erase button and + button
+                      Row(
+                        children: [
+                          const SizedBox(width: 20),
+                          Text(
+                            'Time: $_time',
+                            style: globalStyles.font.header,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                lines.clear();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: globalStyles.colors.secondary,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: const Text(
+                              'Erase',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors
+                                    .white, //or black idk what u guys prefer
+                              ),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Erase',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color:
-                                Colors.white, //or black idk what u guys prefer
+
+                          //TO DELETE LATER, ONLY FOR TESTING
+                          ElevatedButton(
+                            onPressed: () {
+                              equationIndexIncrement();
+                            },
+                            child: Text('+'),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -228,12 +279,6 @@ class _NormalGameScreen extends State<NormalGameScreen> {
           ),
         ],
       ),
-      //TO DELETE LATER, ONLY FOR TESTING
-      floatingActionButton: ElevatedButton(
-          onPressed: () {
-            equationIndexIncrement();
-          },
-          child: Text('+')),
     );
   }
 }
