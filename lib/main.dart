@@ -49,9 +49,9 @@ class MyApp extends StatelessWidget {
             ),
         '/leaderboard': (context) => const Leaderboard(userId: 0),
         '/play': (context) => const PlayScreen(),
-        '/play/normal': (context) => const PlayNormal(),
-        '/play/ranked': (context) => const PlayRanked(),
-        '/play/normal/cal20': (context) => const NormalGameScreen(),
+        '/normal': (context) => const PlayNormal(),
+        '/ranked': (context) => const PlayRanked(),
+        '/normal/cal20': (context) => const NormalGameScreen(),
         '/login': (context) => const LoginPage(),
         '/signin': (context) => const LoginPage(), // TODO: replace by signin
         '/account': (context) => const LoginPage(), // TODO: replace by account

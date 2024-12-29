@@ -28,6 +28,14 @@ class Home extends StatelessWidget {
           ),
         ),
         backgroundColor: WidgetStatePropertyAll(Colors.transparent));
+    final BoxDecoration buttonBoxStyle =
+        BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
+      BoxShadow(
+          color: const Color.fromARGB(84, 0, 0, 0),
+          offset: Offset(1, 3),
+          blurRadius: 5,
+          blurStyle: BlurStyle.inner)
+    ]);
 
     VoidCallback handleClick(String path) {
       final user = FirebaseAuth.instance.currentUser;
@@ -42,6 +50,7 @@ class Home extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: globalStyles.colors.white,
       body: Row(
         children: <Widget>[
           Expanded(
@@ -114,35 +123,50 @@ class Home extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            globalStyles.colors.primary,
-                            globalStyles.colors.secondary,
-                            const Color.fromARGB(255, 28, 115, 255),
-                          ],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color.fromARGB(125, 0, 0, 0),
-                              offset: Offset(1, 4),
-                              blurRadius: 5,
-                              blurStyle: BlurStyle.inner)
-                        ]),
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.primary,
+                          globalStyles.colors.secondary,
+                          const Color.fromARGB(255, 28, 115, 255),
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
                       onPressed: () async {
-                        await Navigator.pushNamed(context, '/play');
+                        await Navigator.pushNamed(context, '/normal');
                       },
-                      child: Text("Play", style: globalStyles.font.button),
+                      child:
+                          Text("Quick Play", style: globalStyles.font.button),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.green,
+                          globalStyles.colors.green2,
+                          globalStyles.colors.green3,
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: FilledButton.tonal(
+                      style: buttonStyle,
+                      onPressed: () async {
+                        await Navigator.pushNamed(context, '/ranked');
+                      },
+                      child: Text("Ranked", style: globalStyles.font.button),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: buttonBoxStyle.copyWith(
                       gradient: LinearGradient(
                         colors: [
                           globalStyles.colors.accent2,
@@ -152,7 +176,6 @@ class Home extends StatelessWidget {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
-                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
@@ -167,7 +190,7 @@ class Home extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
+                    decoration: buttonBoxStyle.copyWith(
                       gradient: LinearGradient(
                         colors: [
                           globalStyles.colors.red3,
@@ -177,7 +200,6 @@ class Home extends StatelessWidget {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
-                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
@@ -189,9 +211,6 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 50,
-                  )
                 ],
               ),
             ),
