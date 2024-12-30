@@ -25,6 +25,7 @@ linter:
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
     - discarded_futures
     - unawaited_futures
+    - prefer_double_quotes
 
 analyzer:
   plugins:

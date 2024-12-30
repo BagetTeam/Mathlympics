@@ -1,19 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
 
 class Home extends StatelessWidget {
   const Home({
     super.key,
     required this.title,
-    required this.userLevel,
-    required this.userXp,
+    required this.user,
     this.logo = const SizedBox.shrink(),
   });
   final String title;
-  final int userLevel;
-  final int userXp;
   final Widget logo;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +35,9 @@ class Home extends StatelessWidget {
           blurStyle: BlurStyle.inner)
     ]);
 
-    VoidCallback handleClick(String path) {
-      final user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        path = "/login";
-      }
-
-      return () async {
-        await Navigator.pushNamed(context, path);
-      };
-    }
+    VoidCallback handleClick(String path) => () async {
+          await Navigator.pushNamed(context, path);
+        };
 
     return Scaffold(
       backgroundColor: globalStyles.colors.white,
@@ -56,7 +46,7 @@ class Home extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              key: Key('value'),
+              key: Key("value"),
               height: double.infinity,
               color: const Color.fromARGB(224, 171, 227, 255),
               child: Padding(
@@ -72,7 +62,7 @@ class Home extends StatelessWidget {
                         margin: EdgeInsets.only(bottom: 10),
                         width: constraints.maxWidth * 0.25,
                         child: Image.asset(
-                          'assets/images/main_logo.png',
+                          "assets/images/main_logo.png",
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -81,7 +71,7 @@ class Home extends StatelessWidget {
                         style: globalStyles.font.header,
                       ),
                       Text(
-                        "Level $userLevel",
+                        "Level 99999",
                         style: globalStyles.font.normal,
                       ),
                       SizedBox(
@@ -136,9 +126,7 @@ class Home extends StatelessWidget {
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
-                      onPressed: () async {
-                        await Navigator.pushNamed(context, '/normal');
-                      },
+                      onPressed: handleClick("/normal"),
                       child:
                           Text("Quick Play", style: globalStyles.font.button),
                     ),
@@ -158,9 +146,7 @@ class Home extends StatelessWidget {
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
-                      onPressed: () async {
-                        await Navigator.pushNamed(context, '/ranked');
-                      },
+                      onPressed: handleClick("/ranked"),
                       child: Text("Ranked", style: globalStyles.font.button),
                     ),
                   ),
@@ -179,9 +165,7 @@ class Home extends StatelessWidget {
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
-                      onPressed: () async {
-                        await Navigator.pushNamed(context, '/leaderboard');
-                      },
+                      onPressed: handleClick("/leaderboard"),
                       child: Text(
                         "Leaderboard",
                         style: globalStyles.font.button,
@@ -203,7 +187,7 @@ class Home extends StatelessWidget {
                     ),
                     child: FilledButton.tonal(
                       style: buttonStyle,
-                      //TODO add nav when shop is made
+                      // TODO: add nav when shop is made
                       onPressed: () {},
                       child: Text(
                         "Shop",

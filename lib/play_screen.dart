@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
 
 class PlayScreen extends StatelessWidget {
   const PlayScreen({
@@ -10,15 +10,15 @@ class PlayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Play'),
+        title: Text("Play"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/normal');
+                onPressed: () async {
+                  await Navigator.pushNamed(context, "/normal");
                 },
                 child: Text("Normal")),
             FilledButton(onPressed: () {}, child: Text("Ranked")),
@@ -46,10 +46,12 @@ class PlayNormal extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black87),
-                  onPressed: () => Navigator.popAndPushNamed(context, '/'),
+                  onPressed: () async {
+                    await Navigator.popAndPushNamed(context, "/");
+                  },
                 ),
                 Text(
-                  'Quick Play',
+                  "Quick Play",
                   style: globalStyles.font.header,
                 ),
               ],
@@ -61,7 +63,7 @@ class PlayNormal extends StatelessWidget {
               children: [
                 FilledButton(
                     onPressed: () async {
-                      await Navigator.pushNamed(context, '/normal/cal20');
+                      await Navigator.pushNamed(context, "/normal/cal20");
                     },
                     child: Text("Calculation x20")),
                 FilledButton(
