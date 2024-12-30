@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:firebase_database/firebase_database.dart";
+import "package:firebase_core/firebase_core.dart";
 
-class Backend {
-  final User? user;
-
-  Backend.init() : user = FirebaseAuth.instance.currentUser;
-}
+FirebaseApp app = Firebase.app();
+FirebaseDatabase db = FirebaseDatabase.instanceFor(app: app);
+FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);

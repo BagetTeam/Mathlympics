@@ -1,19 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/material.dart";
+import "package:mathlympics/backend/lib.dart";
+import "package:mathlympics/global_styles.dart";
 
 class Home extends StatelessWidget {
   const Home({
     super.key,
     required this.title,
-    required this.userLevel,
-    required this.userXp,
+    required this.user,
     this.logo = const SizedBox.shrink(),
   });
   final String title;
-  final int userLevel;
-  final int userXp;
   final Widget logo;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +29,9 @@ class Home extends StatelessWidget {
       ),
     );
 
-    VoidCallback handleClick(String path) {
-      final user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        path = "/login";
-      }
-
-      return () async {
-        await Navigator.pushNamed(context, path);
-      };
-    }
+    VoidCallback handleClick(String path) => () async {
+          await Navigator.pushNamed(context, path);
+        };
 
     return Scaffold(
       body: Row(
@@ -96,7 +87,7 @@ class Home extends StatelessWidget {
                               globalStyles.colors.accent),
                           foregroundColor: WidgetStateProperty.all(
                               globalStyles.colors.black)),
-                      onPressed: handleClick('/leaderboard'),
+                      onPressed: handleClick("/leaderboard"),
                       child: const Text("Leaderboard")),
                   FilledButton.tonal(
                       style: buttonStyle.copyWith(
@@ -105,13 +96,13 @@ class Home extends StatelessWidget {
                           foregroundColor: WidgetStateProperty.all(
                               globalStyles.colors.black)),
                       // FIX: uncomment this after adding the path
-                      // onPressed: handleClick('/shop'),
+                      // onPressed: handleClick("/shop"),
                       onPressed: null,
                       child: const Text("Shop")),
                   FilledButton(
                       style: buttonStyle,
                       // FIX: uncomment this after adding the path
-                      // onPressed: handleClick('/account'),
+                      // onPressed: handleClick("/account"),
                       onPressed: null,
                       child: const Text("Account")),
                 ],
