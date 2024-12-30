@@ -5,12 +5,14 @@ import 'dart:async';
 class NormalGameScreen extends StatefulWidget {
   const NormalGameScreen({super.key, this.isIntegral = false});
   final bool isIntegral;
+
+  @override
   State<StatefulWidget> createState() => _NormalGameScreen();
 }
 
 class _NormalGameScreen extends State<NormalGameScreen> {
   List<List<Offset>> lines = [];
-  List<String> eq_arithmetics = [
+  List<String> eqArithmetics = [
     "", //keep this
     "", //keep this
     "420 / 69 = __",
@@ -25,7 +27,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "" //keep this
   ];
 
-  List<String> eq_integrals = [
+  List<String> eqIntegrals = [
     "", //keep this
     "", //keep this
     "∫ 2x dx = __",
@@ -81,18 +83,18 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   }
 
   void equationIndexIncrement() {
-    setState(() {
+    setState(() async {
       idx++;
       if (idx >=
           (widget.isIntegral
-              ? eq_integrals.length - 3
-              : eq_arithmetics.length - 3)) {
+              ? eqIntegrals.length - 3
+              : eqArithmetics.length - 3)) {
         idx = 0;
         _timer?.cancel();
         // Save the final time to a global variable or a service
         // For example, using a global variable:
         finalTime = _time;
-        Navigator.pushNamed(context, '/game-over', arguments: {
+        await Navigator.pushNamed(context, '/game-over', arguments: {
           'finalTime': _time,
         });
         //should finish the game
@@ -118,14 +120,14 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                     children: [
                       Text(
                         widget.isIntegral
-                            ? eq_integrals[idx]
-                            : eq_arithmetics[idx],
+                            ? eqIntegrals[idx]
+                            : eqArithmetics[idx],
                         style: globalStyles.font.equations,
                       ),
                       Text(
                         widget.isIntegral
-                            ? eq_integrals[idx + 1]
-                            : eq_arithmetics[idx + 1],
+                            ? eqIntegrals[idx + 1]
+                            : eqArithmetics[idx + 1],
                         style: globalStyles.font.equations,
                       ),
                       //highlighted equation
@@ -138,15 +140,15 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                         ),
                         child: Text(
                           widget.isIntegral
-                              ? eq_integrals[idx + 2]
-                              : eq_arithmetics[idx + 2],
+                              ? eqIntegrals[idx + 2]
+                              : eqArithmetics[idx + 2],
                           style: globalStyles.font.equations,
                         ),
                       ),
                       Text(
                         widget.isIntegral
-                            ? eq_integrals[idx + 3]
-                            : eq_arithmetics[idx + 3],
+                            ? eqIntegrals[idx + 3]
+                            : eqArithmetics[idx + 3],
                         style: globalStyles.font.equations,
                       ),
                     ],
