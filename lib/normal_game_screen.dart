@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mathlympics/global_styles.dart';
+import 'dart:async';
 
 class NormalGameScreen extends StatefulWidget {
-  const NormalGameScreen({super.key});
+  const NormalGameScreen({super.key, this.isIntegral = false});
+  final bool isIntegral;
+
   @override
   State<StatefulWidget> createState() => _NormalGameScreen();
 }
 
 class _NormalGameScreen extends State<NormalGameScreen> {
   List<List<Offset>> lines = [];
-  List<String> eq = [
+  List<String> eqArithmetics = [
     "", //keep this
     "", //keep this
     "420 / 69 = __",
@@ -20,9 +23,56 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "5 x 5 = __",
     "7 x 7 = __",
     "10 + 11 = __",
+    "BOY YOU STUPID HOW DID YOU GET THIS WRONG",
     "" //keep this
   ];
+
+  List<String> eqIntegrals = [
+    "", //keep this
+    "", //keep this
+    "∫ 2x dx = __",
+    "∫ 3x dx = __",
+    "∫ 4x dx = __",
+    "∫ 5x dx = __",
+    "∫ 6x dx = __",
+    "∫ 7x dx = __",
+    "∫ 8x dx = __",
+    "∫ 9x dx = __",
+    "∫ 10x dx = __",
+    "∫ sin(x) dx = __",
+    "∫ cos(x) dx = __",
+    "∫ e^x dx = __",
+    "∫ 1/x dx = __",
+    "∫ ln(x) dx = __",
+    "∫ tan(x) dx = __",
+    "∫ sec(x) dx = __",
+    "" //keep this
+  ];
+
+  Timer? _timer;
+  double _time = 0;
   int idx = 0;
+  double finalTime = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    startChronometer();
+  }
+
+  void startChronometer() {
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _time = double.parse((_time + 0.10).toStringAsFixed(2));
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   // check bounds of drawing
   bool isPointWithinBounds(Offset point, Size size) {
@@ -33,10 +83,20 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   }
 
   void equationIndexIncrement() {
-    setState(() {
+    setState(() async {
       idx++;
-      if (idx >= eq.length - 3) {
+      if (idx >=
+          (widget.isIntegral
+              ? eqIntegrals.length - 3
+              : eqArithmetics.length - 3)) {
         idx = 0;
+        _timer?.cancel();
+        // Save the final time to a global variable or a service
+        // For example, using a global variable:
+        finalTime = _time;
+        await Navigator.pushNamed(context, '/game-over', arguments: {
+          'finalTime': _time,
+        });
         //should finish the game
       }
     });
@@ -59,11 +119,15 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        eq[idx],
+                        widget.isIntegral
+                            ? eqIntegrals[idx]
+                            : eqArithmetics[idx],
                         style: globalStyles.font.equations,
                       ),
                       Text(
-                        eq[idx + 1],
+                        widget.isIntegral
+                            ? eqIntegrals[idx + 1]
+                            : eqArithmetics[idx + 1],
                         style: globalStyles.font.equations,
                       ),
                       //highlighted equation
@@ -75,12 +139,16 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          eq[idx + 2],
+                          widget.isIntegral
+                              ? eqIntegrals[idx + 2]
+                              : eqArithmetics[idx + 2],
                           style: globalStyles.font.equations,
                         ),
                       ),
                       Text(
-                        eq[idx + 3],
+                        widget.isIntegral
+                            ? eqIntegrals[idx + 3]
+                            : eqArithmetics[idx + 3],
                         style: globalStyles.font.equations,
                       ),
                     ],
@@ -143,31 +211,49 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      //erase button
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            lines.clear();
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: globalStyles.colors.secondary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 15,
+                      //erase button and + button
+                      Row(
+                        children: [
+                          const SizedBox(width: 20),
+                          Text(
+                            'Time: $_time',
+                            style: globalStyles.font.header,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                lines.clear();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: globalStyles.colors.secondary,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: const Text(
+                              'Erase',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors
+                                    .white, //or black idk what u guys prefer
+                              ),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Erase',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color:
-                                Colors.white, //or black idk what u guys prefer
+
+                          //TO DELETE LATER, ONLY FOR TESTING
+                          ElevatedButton(
+                            onPressed: () {
+                              equationIndexIncrement();
+                            },
+                            child: Text('+'),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -195,12 +281,6 @@ class _NormalGameScreen extends State<NormalGameScreen> {
           ),
         ],
       ),
-      //TO DELETE LATER, ONLY FOR TESTING
-      floatingActionButton: ElevatedButton(
-          onPressed: () {
-            equationIndexIncrement();
-          },
-          child: Text('+')),
     );
   }
 }

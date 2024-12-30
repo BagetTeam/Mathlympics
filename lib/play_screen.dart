@@ -18,7 +18,7 @@ class PlayScreen extends StatelessWidget {
           children: [
             FilledButton(
                 onPressed: () async {
-                  await Navigator.pushNamed(context, "/play/normal");
+                  await Navigator.pushNamed(context, "/normal");
                 },
                 child: Text("Normal")),
             FilledButton(onPressed: () {}, child: Text("Ranked")),
@@ -66,7 +66,11 @@ class PlayNormal extends StatelessWidget {
                       await Navigator.pushNamed(context, "/normal/cal20");
                     },
                     child: Text("Calculation x20")),
-                FilledButton(onPressed: () {}, child: Text("Integrals")),
+                FilledButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/normal/integrals');
+                    },
+                    child: Text("Integrals")),
               ],
             ),
           ),
