@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 const globalStyles = (
   colors: (
-    green: Color(0xFFa7c957),
+    green: Color.fromARGB(213, 119, 255, 1),
+    green2: Color.fromARGB(255, 39, 222, 22),
+    green3: Color.fromARGB(255, 22, 222, 89),
     red: Color(0xFFd50000),
+    red2: Color.fromARGB(255, 255, 49, 111),
+    red3: Color.fromARGB(255, 255, 110, 134),
     white: Color(0xFFf0fcff),
     black: Color(0xFF111718),
     primary: Color(0xFF90e0ef),
@@ -11,16 +15,72 @@ const globalStyles = (
     third: Color(0xFF023e8a),
     quart: Color(0xFF03045e),
     accent: Color(0xFFff8443),
+    accent2: Color.fromARGB(255, 243, 207, 88),
+    accent3: Color.fromARGB(255, 243, 184, 88),
   ),
   font: (
     size: 16.0,
     title: TextStyle(
-      fontSize: 32, // Set the font size
+      fontSize: 40, // Set the font size
       fontFamily:
-          'Roboto', // Change the font (use any font available in your app)
+          'LuckiestGuy', // Change the font (use any font available in your app)
+      //fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
+    header: TextStyle(
+      fontSize: 22.0, // Set the font size
+      fontFamily:
+          'Acme', // Change the font (use any font available in your app)
       fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color(0xFF111718),
-    )
+    ),
+    button: TextStyle(
+      fontSize: 25, // Set the font size
+      fontFamily:
+          'LuckiestGuy', // Change the font (use any font available in your app)
+      //fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color.fromARGB(255, 244, 253, 255),
+      letterSpacing: 1,
+      shadows: [
+        Shadow(color: Colors.black, offset: Offset(2, 2), blurRadius: 4.5),
+        // Shadow(color: Colors.black, offset: Offset(-1.5, 1.5), blurRadius: 1.5),
+        // Shadow(
+        //     color: Colors.black, offset: Offset(-1.5, -1.5), blurRadius: 1.5),
+        // Shadow(color: Colors.black, offset: Offset(1.5, -1.5), blurRadius: 1.5)
+      ],
+    ),
+    // buttonBorder: TextStyle(
+    //   fontSize: 25, // Set the font size
+    //   fontFamily:
+    //       'LuckiestGuy', // Change the font (use any font available in your app)
+    //   //fontWeight: FontWeight.bold, // Optional: Adjust font weight
+    //   foreground: Paint()
+    //     ..style = PaintingStyle.stroke
+    //     ..strokeWidth = 1
+    //     ..color = const Color.fromARGB(255, 0, 0, 0),
+    //   // color: Color.fromARGB(255, 244, 253, 255),
+    //   // shadows: [
+    //   //   Shadow(color: Colors.black, offset: Offset(1.5, 1.5)),
+    //   //   Shadow(color: Colors.black, offset: Offset(-1.5, 1.5)),
+    //   //   Shadow(color: Colors.black, offset: Offset(-1.5, -1.5)),
+    //   //   Shadow(color: Colors.black, offset: Offset(1.5, -1.5))
+    //   // ],
+    // ),
+    normal: TextStyle(
+      fontSize: 14.0, // Set the font size
+      fontFamily:
+          'Acme', // Change the font (use any font available in your app)
+      fontWeight: FontWeight.w600, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
+    equations: TextStyle(
+      fontSize: 30.0, // Set the font size
+      letterSpacing: 5,
+      fontFamily:
+          'Acme', // Change the font (use any font available in your app)
+      fontWeight: FontWeight.w600, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
   ),
   // copied these base styles from tailwind.css
   border: (

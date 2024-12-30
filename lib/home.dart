@@ -1,6 +1,5 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:mathlympics/backend/lib.dart";
 import "package:mathlympics/global_styles.dart";
 
 class Home extends StatelessWidget {
@@ -17,43 +16,82 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle buttonStyle = ButtonStyle(
-      fixedSize: WidgetStateProperty.all(Size(500, 35)),
-      textStyle:
-          WidgetStateProperty.all(TextStyle(fontSize: globalStyles.font.size)),
-      padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+        fixedSize: WidgetStateProperty.all(Size(500, 35)),
+        textStyle: WidgetStateProperty.all(globalStyles.font.button),
+        padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
-      ),
-    );
+        backgroundColor: WidgetStatePropertyAll(Colors.transparent));
+    final BoxDecoration buttonBoxStyle =
+        BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
+      BoxShadow(
+          color: const Color.fromARGB(84, 0, 0, 0),
+          offset: Offset(1, 3),
+          blurRadius: 5,
+          blurStyle: BlurStyle.inner)
+    ]);
 
     VoidCallback handleClick(String path) => () async {
           await Navigator.pushNamed(context, path);
         };
 
     return Scaffold(
+      backgroundColor: globalStyles.colors.white,
       body: Row(
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "NanoScience",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                    ),
-                    Text("Level 999")
-                  ],
-                ),
+            child: Container(
+              key: Key("value"),
+              height: double.infinity,
+              color: const Color.fromARGB(224, 171, 227, 255),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        width: constraints.maxWidth * 0.25,
+                        child: Image.asset(
+                          "assets/images/main_logo.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Text(
+                        "NanoScience",
+                        style: globalStyles.font.header,
+                      ),
+                      Text(
+                        "Level 99999",
+                        style: globalStyles.font.normal,
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * 0.15,
+                      ),
+                      Text(
+                        "Total Wins: 999999999",
+                        style: globalStyles.font.normal,
+                      ),
+                      Text(
+                        "Global Rank: #1",
+                        style: globalStyles.font.normal,
+                      ),
+                      SizedBox(
+                        height: constraints.maxHeight * 0.15,
+                      ),
+                      ElevatedButton(onPressed: () {}, child: Text("Settings")),
+                    ],
+                  );
+                }),
               ),
             ),
           ),
@@ -73,38 +111,90 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                          backgroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.primary),
-                          foregroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.black)),
-                      onPressed: handleClick("play"),
-                      child: Text("Play")),
-                  FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                          backgroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.accent),
-                          foregroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.black)),
-                      onPressed: handleClick("/leaderboard"),
-                      child: const Text("Leaderboard")),
-                  FilledButton.tonal(
-                      style: buttonStyle.copyWith(
-                          backgroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.secondary),
-                          foregroundColor: WidgetStateProperty.all(
-                              globalStyles.colors.black)),
-                      // FIX: uncomment this after adding the path
-                      // onPressed: handleClick("/shop"),
-                      onPressed: null,
-                      child: const Text("Shop")),
-                  FilledButton(
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.primary,
+                          globalStyles.colors.secondary,
+                          const Color.fromARGB(255, 28, 115, 255),
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: FilledButton.tonal(
                       style: buttonStyle,
-                      // FIX: uncomment this after adding the path
-                      // onPressed: handleClick("/account"),
-                      onPressed: null,
-                      child: const Text("Account")),
+                      onPressed: handleClick("/normal"),
+                      child:
+                          Text("Quick Play", style: globalStyles.font.button),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.green,
+                          globalStyles.colors.green2,
+                          globalStyles.colors.green3,
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: FilledButton.tonal(
+                      style: buttonStyle,
+                      onPressed: handleClick("/ranked"),
+                      child: Text("Ranked", style: globalStyles.font.button),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.accent2,
+                          globalStyles.colors.accent3,
+                          globalStyles.colors.accent,
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                    child: FilledButton.tonal(
+                      style: buttonStyle,
+                      onPressed: handleClick("/leaderboard"),
+                      child: Text(
+                        "Leaderboard",
+                        style: globalStyles.font.button,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: buttonBoxStyle.copyWith(
+                      gradient: LinearGradient(
+                        colors: [
+                          globalStyles.colors.red3,
+                          globalStyles.colors.red2,
+                          globalStyles.colors.red,
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                    child: FilledButton.tonal(
+                      style: buttonStyle,
+                      // TODO: add nav when shop is made
+                      onPressed: () {},
+                      child: Text(
+                        "Shop",
+                        style: globalStyles.font.button,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
