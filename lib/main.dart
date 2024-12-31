@@ -1,4 +1,3 @@
-
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
@@ -14,7 +13,6 @@ import "logos.dart";
 import "firebase_options.dart";
 import "backend/lib.dart";
 import "game_over_screen.dart";
-
 
 /// Sets up the preferred device orientations and system UI mode.
 Future<void> setUp() async {
@@ -69,11 +67,13 @@ class MyApp extends StatelessWidget {
         "/shop": (context) => const LoginPage(), // TODO: replace by shop
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/game-over') {
+        if (settings.name == "/game-over") {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) {
-              return GameOverScreen(finalTime: args['finalTime']);
+              return GameOverScreen(
+                  finalTime: args["finalTime"],
+                  rightAnswers: args["rightAnswers"]);
             },
           );
         }

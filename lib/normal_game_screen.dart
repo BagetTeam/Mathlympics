@@ -5,14 +5,12 @@ import 'dart:async';
 class NormalGameScreen extends StatefulWidget {
   const NormalGameScreen({super.key, this.isIntegral = false});
   final bool isIntegral;
-
-  @override
   State<StatefulWidget> createState() => _NormalGameScreen();
 }
 
 class _NormalGameScreen extends State<NormalGameScreen> {
   List<List<Offset>> lines = [];
-  List<String> eqArithmetics = [
+  List<String> eq_arithmetics = [
     "", //keep this
     "", //keep this
     "420 / 69 = __",
@@ -27,7 +25,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "" //keep this
   ];
 
-  List<String> eqIntegrals = [
+  List<String> eq_integrals = [
     "", //keep this
     "", //keep this
     "∫ 2x dx = __",
@@ -49,10 +47,10 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "" //keep this
   ];
 
+  final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
-  double _time = 0;
   int idx = 0;
-  double finalTime = 0;
+  int rightAnswers = 0;
 
   @override
   void initState() {
@@ -61,16 +59,16 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   }
 
   void startChronometer() {
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      setState(() {
-        _time = double.parse((_time + 0.10).toStringAsFixed(2));
-      });
+    _stopwatch.start();
+    _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
+      setState(() {});
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _stopwatch.stop();
     super.dispose();
   }
 
@@ -83,20 +81,18 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   }
 
   void equationIndexIncrement() {
-    setState(() async {
+    setState(() {
       idx++;
       if (idx >=
           (widget.isIntegral
-              ? eqIntegrals.length - 3
-              : eqArithmetics.length - 3)) {
+              ? eq_integrals.length - 3
+              : eq_arithmetics.length - 3)) {
         idx = 0;
         _timer?.cancel();
-        // Save the final time to a global variable or a service
-        // For example, using a global variable:
-        finalTime = _time;
-        await Navigator.pushNamed(context, '/game-over', arguments: {
-          'finalTime': _time,
-        });
+        _stopwatch.stop();
+        final double finalTime = _stopwatch.elapsedMilliseconds / 1000;
+        Navigator.pushNamed(context, "/game-over",
+            arguments: {"finalTime": finalTime, "rightAnswers": rightAnswers});
         //should finish the game
       }
     });
@@ -104,6 +100,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double elapsedTime = _stopwatch.elapsedMilliseconds / 1000;
     return Scaffold(
       backgroundColor: globalStyles.colors.white,
       body: Stack(
@@ -120,14 +117,14 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                     children: [
                       Text(
                         widget.isIntegral
-                            ? eqIntegrals[idx]
-                            : eqArithmetics[idx],
+                            ? eq_integrals[idx]
+                            : eq_arithmetics[idx],
                         style: globalStyles.font.equations,
                       ),
                       Text(
                         widget.isIntegral
-                            ? eqIntegrals[idx + 1]
-                            : eqArithmetics[idx + 1],
+                            ? eq_integrals[idx + 1]
+                            : eq_arithmetics[idx + 1],
                         style: globalStyles.font.equations,
                       ),
                       //highlighted equation
@@ -140,15 +137,15 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                         ),
                         child: Text(
                           widget.isIntegral
-                              ? eqIntegrals[idx + 2]
-                              : eqArithmetics[idx + 2],
+                              ? eq_integrals[idx + 2]
+                              : eq_arithmetics[idx + 2],
                           style: globalStyles.font.equations,
                         ),
                       ),
                       Text(
                         widget.isIntegral
-                            ? eqIntegrals[idx + 3]
-                            : eqArithmetics[idx + 3],
+                            ? eq_integrals[idx + 3]
+                            : eq_arithmetics[idx + 3],
                         style: globalStyles.font.equations,
                       ),
                     ],
@@ -213,11 +210,14 @@ class _NormalGameScreen extends State<NormalGameScreen> {
 
                       //erase button and + button
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const SizedBox(width: 20),
-                          Text(
-                            'Time: $_time',
-                            style: globalStyles.font.header,
+                          SizedBox(
+                            width: 125,
+                            child: Text(
+                              "Time:  ${elapsedTime.toStringAsFixed(3)}",
+                              style: globalStyles.font.header,
+                            ),
                           ),
 
                           ElevatedButton(
