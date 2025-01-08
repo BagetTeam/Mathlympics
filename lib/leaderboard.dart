@@ -18,7 +18,25 @@ class Leaderboard extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Leaderboard'),
+          automaticallyImplyLeading: false,
+          title: Positioned(
+            top: 10,
+            left: 10,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.black87),
+                  onPressed: () async {
+                    await Navigator.popAndPushNamed(context, "/");
+                  },
+                ),
+                Text(
+                  "Leaderboard",
+                  style: globalStyles.font.header,
+                ),
+              ],
+            ),
+          ),
           notificationPredicate: (ScrollNotification notification) {
             return notification.depth == 1;
           },
@@ -27,12 +45,34 @@ class Leaderboard extends StatelessWidget {
           bottom: TabBar(
             tabs: <Widget>[
               Tab(
-                icon: const Icon(Icons.cloud_outlined),
-                text: titles[0],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.people),
+                    SizedBox(
+                        width:
+                            8), // Adds some space between the icon and the text
+                    Text(
+                      titles[0],
+                      style: globalStyles.font.header,
+                    ),
+                  ],
+                ),
               ),
               Tab(
-                icon: const Icon(Icons.beach_access_sharp),
-                text: titles[1],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.bolt_outlined),
+                    SizedBox(
+                        width:
+                            8), // Adds some space between the icon and the text
+                    Text(
+                      titles[1],
+                      style: globalStyles.font.header,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
