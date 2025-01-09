@@ -5,10 +5,12 @@ import "package:mathlympics/leaderboard.dart";
 import "package:mathlympics/login/page.dart";
 import "package:mathlympics/normal_game_screen.dart";
 import "package:mathlympics/play_screen.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 import "global_styles.dart";
 import "home.dart";
 import "logos.dart";
 import "game_over_screen.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 
 /// Sets up the preferred device orientations and system UI mode.
 Future<void> setUp() async {
@@ -16,6 +18,11 @@ Future<void> setUp() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+
+  await dotenv.load(fileName: '.env');
+
+  await Supabase.initialize(
+      url: dotenv.env['URL']!, anonKey: dotenv.env['ANONKEY']!);
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack,
       overlays: []);
