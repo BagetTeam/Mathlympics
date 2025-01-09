@@ -1,4 +1,3 @@
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/global_styles.dart";
@@ -7,12 +6,10 @@ class Home extends StatefulWidget {
   const Home({
     super.key,
     required this.title,
-    required this.user,
     this.logo = const SizedBox.shrink(),
   });
   final String title;
   final Widget logo;
-  final User? user;
 
   @override
   State<StatefulWidget> createState() => _Home();
@@ -125,7 +122,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           ),
           Row(
             children: <Widget>[
-              Expanded(flex: 1, child: ProfileSection(user: widget.user)),
+              Expanded(flex: 1, child: ProfileSection()),
               Expanded(
                 flex: 2,
                 child: ButtonSection(
@@ -142,11 +139,8 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
 
 class ProfileSection extends StatelessWidget {
   const ProfileSection({
-    required this.user,
     super.key,
   });
-
-  final User? user;
 
   @override
   Widget build(BuildContext context) {
