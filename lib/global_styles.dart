@@ -27,6 +27,13 @@ const globalStyles = (
       //fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
+    title2: TextStyle(
+      fontSize: 30, // Set the font size
+      fontFamily:
+          'Acme', // Change the font (use any font available in your app)
+      //fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
     header: TextStyle(
       fontSize: 22.0, // Set the font size
       fontFamily:

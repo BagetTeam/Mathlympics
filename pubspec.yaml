@@ -39,6 +39,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
   firebase_database: ^11.2.0
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/icons/
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
