@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
+import "package:flutter_svg/flutter_svg.dart";
 
 class Leaderboard extends StatelessWidget {
   const Leaderboard({super.key, required this.userId});
@@ -12,8 +12,8 @@ class Leaderboard extends StatelessWidget {
     final Color oddItemColor = globalStyles.colors.primary;
     final Color evenItemColor = globalStyles.colors.secondary;
     const int tabsCount = 2;
-    const List<String> titles = <String>['Friends', 'Global'];
-    final BoxDecoration TabStyle =
+    const List<String> titles = <String>["Friends", "Global"];
+    final BoxDecoration tabStyle =
         BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
       BoxShadow(
           color: const Color.fromARGB(84, 0, 0, 0),
