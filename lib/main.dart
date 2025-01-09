@@ -1,6 +1,3 @@
-
-import "package:firebase_auth/firebase_auth.dart";
-import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
@@ -11,10 +8,7 @@ import "package:mathlympics/play_screen.dart";
 import "global_styles.dart";
 import "home.dart";
 import "logos.dart";
-import "firebase_options.dart";
-import "backend/lib.dart";
 import "game_over_screen.dart";
-
 
 /// Sets up the preferred device orientations and system UI mode.
 Future<void> setUp() async {
@@ -31,8 +25,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setUp();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -41,7 +33,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = auth.currentUser;
     return MaterialApp(
       title: "Mathlympics",
       theme: ThemeData(
@@ -54,7 +45,6 @@ class MyApp extends StatelessWidget {
         "/": (context) => Home(
               title: "Mathlympics",
               logo: Logos.appLogo(),
-              user: user,
             ),
         "/leaderboard": (context) => const Leaderboard(userId: 0),
         "/play": (context) => const PlayScreen(),
@@ -73,7 +63,7 @@ class MyApp extends StatelessWidget {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) {
-              return GameOverScreen(finalTime: args['finalTime']);
+              return GameOverScreen(finalTime: args["finalTime"]);
             },
           );
         }
