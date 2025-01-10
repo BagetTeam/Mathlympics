@@ -56,6 +56,20 @@ const globalStyles = (
         // Shadow(color: Colors.black, offset: Offset(1.5, -1.5), blurRadius: 1.5)
       ],
     ),
+    button2: TextStyle(
+      fontSize: 25, // Set the font size
+      fontFamily:
+          'LuckiestGuy', // Change the font (use any font available in your app)
+      //fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color.fromARGB(255, 0, 0, 0),
+      letterSpacing: 1,
+      shadows: [
+        Shadow(
+            color: Color.fromARGB(255, 206, 206, 206),
+            offset: Offset(2, 2),
+            blurRadius: 4.5),
+      ],
+    ),
     // buttonBorder: TextStyle(
     //   fontSize: 25, // Set the font size
     //   fontFamily:

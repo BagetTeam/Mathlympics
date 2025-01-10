@@ -17,7 +17,6 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  int _frameSkip = 0;
   //late Animation<double> _animation;
 
   @override

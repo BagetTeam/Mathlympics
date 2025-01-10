@@ -27,6 +27,7 @@ class Leaderboard extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 15,
           backgroundColor: globalStyles.colors.primary,
           automaticallyImplyLeading: false,
           title: Row(
@@ -34,16 +35,19 @@ class Leaderboard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black87),
-                    onPressed: () async {
-                      await Navigator.popAndPushNamed(context, "/");
-                    },
+                  Container(
+                    transform: Matrix4.skewX(45),
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.black87),
+                      onPressed: () async {
+                        await Navigator.popAndPushNamed(context, "/");
+                      },
+                    ),
                   ),
-                  Text(
-                    "Back",
-                    style: globalStyles.font.header,
-                  ),
+                  // Text(
+                  //   "Back",
+                  //   style: globalStyles.font.header,
+                  // ),
                 ],
               ),
               Expanded(
@@ -77,6 +81,7 @@ class Leaderboard extends StatelessWidget {
             ),
             tabs: <Widget>[
               Tab(
+                height: 10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -94,6 +99,7 @@ class Leaderboard extends StatelessWidget {
                 ),
               ),
               Tab(
+                height: 10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -160,7 +166,7 @@ class Leaderboard extends StatelessWidget {
                         else // Display the rank number for the rest
                           Text(
                             "$displayIndex",
-                            style: globalStyles.font.button,
+                            style: globalStyles.font.normal,
                           ),
                         SizedBox(
                             width:
@@ -168,7 +174,7 @@ class Leaderboard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             titles[0],
-                            style: globalStyles.font.button,
+                            style: globalStyles.font.normal,
                           ),
                         ),
                       ],
