@@ -19,13 +19,20 @@ Future<void> setUp() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
-      url: dotenv.env['URL']!, anonKey: dotenv.env['ANONKEY']!);
+      url: dotenv.env["URL"]!, anonKey: dotenv.env["ANONKEY"]!);
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack,
-      overlays: []);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  await SystemChrome.setSystemUIChangeCallback(
+      (systemOverlaysAreVisible) async {
+    if (systemOverlaysAreVisible) {
+      Future.delayed(const Duration(seconds: 2), () async {
+        await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+      });
+    }
+  });
 }
 
 void main() async {
