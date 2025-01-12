@@ -56,7 +56,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
         return Positioned(
           left: xCalculation(_controller.value) * screenWidth,
           top: yCalculation(_controller.value) * screenHeight,
-          child: Opacity(opacity: 0.3, child: child),
+          child: Opacity(opacity: 0.2, child: child),
         );
       },
     );

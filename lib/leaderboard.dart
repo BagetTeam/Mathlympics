@@ -27,7 +27,7 @@ class Leaderboard extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 15,
+          toolbarHeight: 23,
           backgroundColor: globalStyles.colors.primary,
           automaticallyImplyLeading: false,
           title: Row(
@@ -36,7 +36,6 @@ class Leaderboard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    transform: Matrix4.skewX(45),
                     child: IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.black87),
                       onPressed: () async {
@@ -54,7 +53,7 @@ class Leaderboard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     "Math Battle Leaderboard",
-                    style: globalStyles.font.title2,
+                    style: globalStyles.font.header,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -77,36 +76,37 @@ class Leaderboard extends StatelessWidget {
             indicatorColor: globalStyles.colors.secondary,
             indicator: BoxDecoration(
               color: globalStyles.colors.secondary,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(5),
             ),
             tabs: <Widget>[
               Tab(
-                height: 10,
+                height: 23,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.people_outline,
-                      size: 22.0,
+                      size: 15.0,
                     ),
                     SizedBox(
                         width:
                             8), // Adds some space between the icon and the text
                     Text(
                       titles[0],
+                      style: globalStyles.font.normal,
                     ),
                   ],
                 ),
               ),
               Tab(
-                height: 10,
+                height: 23,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
                       "assets/icons/trophy_icon.svg",
-                      width: 22.0,
-                      height: 22.0,
+                      width: 15.0,
+                      height: 15.0,
                     ),
                     SizedBox(
                         width:
@@ -124,6 +124,7 @@ class Leaderboard extends StatelessWidget {
         body: TabBarView(
           children: <Widget>[
             ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               itemCount: 25,
               itemBuilder: (BuildContext context, index) {
                 final int displayIndex = index + 1;
@@ -131,13 +132,13 @@ class Leaderboard extends StatelessWidget {
                 Color containerColor;
                 String? medalIcon;
                 if (displayIndex == 1) {
-                  containerColor = Colors.amber;
+                  containerColor = const Color.fromARGB(255, 255, 222, 122);
                   medalIcon = "assets/icons/gold_medal.svg";
                 } else if (displayIndex == 2) {
-                  containerColor = const Color.fromARGB(255, 167, 167, 167);
+                  containerColor = const Color.fromARGB(255, 209, 209, 209);
                   medalIcon = "assets/icons/silver_medal.svg";
                 } else if (displayIndex == 3) {
-                  containerColor = const Color.fromARGB(255, 178, 113, 90);
+                  containerColor = const Color.fromARGB(255, 215, 142, 115);
                   medalIcon = "assets/icons/bronze_medal.svg";
                 } else {
                   containerColor = globalStyles.colors.white;
@@ -146,36 +147,51 @@ class Leaderboard extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 10, top: 10),
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(bottom: 8, top: 4),
                     decoration: BoxDecoration(
                       color: containerColor,
-                      borderRadius: BorderRadius.circular(
-                          8), // Optional: add rounded corners
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: EdgeInsets.all(
-                        16), // Optional: add padding inside the container
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                     child: Row(
                       children: [
                         if (medalIcon !=
                             null) // Add the medal icon for the top three
                           SvgPicture.asset(
                             medalIcon,
-                            width: 24,
-                            height: 24,
+                            width: 20,
+                            height: 20,
                           )
                         else // Display the rank number for the rest
-                          Text(
-                            "$displayIndex",
-                            style: globalStyles.font.normal,
+                          Container(
+                            width: 20,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "$displayIndex",
+                              style: globalStyles.font.header2,
+                            ),
                           ),
-                        SizedBox(
-                            width:
-                                4), // Add some space between icon/number and text
+                        SizedBox(width: 14),
                         Expanded(
-                          child: Text(
-                            titles[0],
-                            style: globalStyles.font.normal,
-                          ),
+                          child: Row(children: [
+                            Image.asset(
+                              "assets/images/main_logo.png",
+                              height: 50,
+                            ),
+                            SizedBox(width: 14),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  titles[0],
+                                  style: globalStyles.font.normal,
+                                ),
+                                Text("Time: 0.00001s")
+                              ],
+                            )
+                          ]),
                         ),
                       ],
                     ),

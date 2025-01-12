@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 const globalStyles = (
   colors: (
@@ -23,28 +23,35 @@ const globalStyles = (
     title: TextStyle(
       fontSize: 40, // Set the font size
       fontFamily:
-          'LuckiestGuy', // Change the font (use any font available in your app)
+          "LuckiestGuy", // Change the font (use any font available in your app)
       //fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
     title2: TextStyle(
       fontSize: 30, // Set the font size
       fontFamily:
-          'Acme', // Change the font (use any font available in your app)
+          "Acme", // Change the font (use any font available in your app)
       //fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
     header: TextStyle(
       fontSize: 22.0, // Set the font size
       fontFamily:
-          'Acme', // Change the font (use any font available in your app)
+          "Acme", // Change the font (use any font available in your app)
+      fontWeight: FontWeight.bold, // Optional: Adjust font weight
+      color: Color(0xFF111718),
+    ),
+    header2: TextStyle(
+      fontSize: 16.0, // Set the font size
+      fontFamily:
+          "Acme", // Change the font (use any font available in your app)
       fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
     button: TextStyle(
       fontSize: 25, // Set the font size
       fontFamily:
-          'LuckiestGuy', // Change the font (use any font available in your app)
+          "LuckiestGuy", // Change the font (use any font available in your app)
       //fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color.fromARGB(255, 244, 253, 255),
       letterSpacing: 1,
@@ -59,7 +66,7 @@ const globalStyles = (
     button2: TextStyle(
       fontSize: 25, // Set the font size
       fontFamily:
-          'LuckiestGuy', // Change the font (use any font available in your app)
+          "LuckiestGuy", // Change the font (use any font available in your app)
       //fontWeight: FontWeight.bold, // Optional: Adjust font weight
       color: Color.fromARGB(255, 0, 0, 0),
       letterSpacing: 1,
@@ -73,7 +80,7 @@ const globalStyles = (
     // buttonBorder: TextStyle(
     //   fontSize: 25, // Set the font size
     //   fontFamily:
-    //       'LuckiestGuy', // Change the font (use any font available in your app)
+    //       "LuckiestGuy", // Change the font (use any font available in your app)
     //   //fontWeight: FontWeight.bold, // Optional: Adjust font weight
     //   foreground: Paint()
     //     ..style = PaintingStyle.stroke
@@ -90,7 +97,7 @@ const globalStyles = (
     normal: TextStyle(
       fontSize: 14.0, // Set the font size
       fontFamily:
-          'Acme', // Change the font (use any font available in your app)
+          "Acme", // Change the font (use any font available in your app)
       fontWeight: FontWeight.w600, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
@@ -98,7 +105,7 @@ const globalStyles = (
       fontSize: 30.0, // Set the font size
       letterSpacing: 5,
       fontFamily:
-          'Acme', // Change the font (use any font available in your app)
+          "Acme", // Change the font (use any font available in your app)
       fontWeight: FontWeight.w600, // Optional: Adjust font weight
       color: Color(0xFF111718),
     ),
