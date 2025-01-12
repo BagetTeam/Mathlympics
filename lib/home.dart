@@ -205,6 +205,10 @@ class ButtonSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VoidCallback handleClick(String path) => () async {
+          if (path == "/ranked" || path == "/leaderboard") {
+            path = "/login";
+          }
+
           await Navigator.pushNamed(context, path);
         };
 
