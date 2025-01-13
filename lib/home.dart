@@ -223,6 +223,7 @@ class ButtonSection extends StatelessWidget {
           ),
         ),
         backgroundColor: WidgetStatePropertyAll(Colors.transparent));
+
     final BoxDecoration buttonBoxStyle =
         BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
       BoxShadow(
