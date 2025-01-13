@@ -10,16 +10,10 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-            child: Container(
-                // decoration: BoxDecoration(
-                //     color: globalStyles.colors.white,
-                //     borderRadius: BorderRadius.all(
-                //         Radius.circular(globalStyles.border.radius.base)),
-                //     boxShadow: globalStyles.boxShadow.base),
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                width: 350.0,
-                child: LoginForm())));
+            child: SizedBox(
+          width: 350,
+          child: LoginForm(),
+        )));
   }
 }
 
@@ -74,10 +68,10 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: Column(spacing: 30.0, children: [
+        child: Column(mainAxisSize: MainAxisSize.min, spacing: 20.0, children: [
           Text("Mathlympics", style: globalStyles.font.header),
           Column(
-            spacing: 20.0,
+            spacing: 10.0,
             children: [
               TextFormField(
                   controller: _emailController,
@@ -111,21 +105,39 @@ class _LoginFormState extends State<LoginForm> {
                       errorText: _isError ? "Wrong password" : null,
                       labelText: "Password",
                       border: UnderlineInputBorder())),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                      onTap: () async {
+                        await Navigator.pushNamed(context, "/forgot-pass");
+                      },
+                      child: Text("I forgor",
+                          style: TextStyle(color: Colors.lightBlue))))
             ],
           ),
-          FilledButton(
-              onPressed: handleSubmit(context),
-              style: ButtonStyle(
-                  shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(8.0)))),
-                  padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
-                      EdgeInsets.all(10.0))),
-              child: Text("Login",
-                  style: TextStyle(
-                      fontFamily: "LuckiestGuy",
-                      fontSize: globalStyles.font.lg.size)))
+          SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                  onPressed: handleSubmit(context),
+                  style: FilledButton.styleFrom(
+                      padding: EdgeInsets.all(10.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                  child: Text("Login",
+                      style: TextStyle(
+                        fontSize: globalStyles.font.lg.size,
+                      )))),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Text("Don't have an account? "),
+            GestureDetector(
+                onTap: () async {
+                  await Navigator.pushNamed(context, "/register");
+                },
+                child: Text("Register",
+                    style: TextStyle(
+                      color: Colors.lightBlue,
+                    )))
+          ])
         ]));
   }
 }
