@@ -24,12 +24,12 @@ Future<void> setUp() async {
   await Supabase.initialize(
       url: dotenv.env["URL"]!, anonKey: dotenv.env["ANONKEY"]!);
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   await SystemChrome.setSystemUIChangeCallback(
       (systemOverlaysAreVisible) async {
     if (systemOverlaysAreVisible) {
       Future.delayed(const Duration(seconds: 2), () async {
-        await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+        await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       });
     }
   });
@@ -50,10 +50,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Mathlympics",
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
-        useMaterial3: true,
-      ),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
+          useMaterial3: true,
+          fontFamily: "Acme"),
       initialRoute: "/",
       routes: {
         "/": (context) => Home(
