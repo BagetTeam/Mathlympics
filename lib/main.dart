@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:mathlympics/leaderboard.dart";
 import "package:mathlympics/login/page.dart";
+import "package:mathlympics/login/register.dart";
 import "package:mathlympics/normal_game_screen.dart";
 import "package:mathlympics/play_screen.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -68,12 +69,13 @@ class MyApp extends StatelessWidget {
         "/normal/integrals": (context) =>
             const NormalGameScreen(isIntegral: true),
         "/login": (context) => const LoginPage(),
-        "/signin": (context) => const LoginPage(), // TODO: replace by signin
+        "/register": (context) => const RegisterPage(),
+        "/forgot-pass": (context) => const RegisterPage(), // TODO: forgot page
         "/account": (context) => const LoginPage(), // TODO: replace by account
         "/shop": (context) => const LoginPage(), // TODO: replace by shop
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/game-over') {
+        if (settings.name == "/game-over") {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) {
