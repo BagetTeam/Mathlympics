@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class Logos {
-  static const String logoPath = 'assets/images/main_logo.png';
+  static const String logoPath = "assets/images/main_logo.png";
   static Widget appLogo() {
     return Image.asset(
       logoPath,

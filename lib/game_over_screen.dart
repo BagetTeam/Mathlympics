@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
 
 class GameOverScreen extends StatelessWidget {
   final double finalTime;
@@ -33,31 +33,31 @@ class GameOverScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Game Over!',
+                  "Game Over!",
                   style: globalStyles.font.title
                       .copyWith(color: globalStyles.colors.secondary),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'You got nothing right.',
+                  "You got nothing right.",
                   style: globalStyles.font.header
                       .copyWith(color: globalStyles.colors.secondary),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Final Time: $finalTime seconds',
+                  "Final Time: $finalTime seconds",
                   style: globalStyles.font.normal
                       .copyWith(color: globalStyles.colors.secondary),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    await Navigator.pushReplacementNamed(context, '/normal');
+                    await Navigator.pushReplacementNamed(context, "/normal");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: globalStyles.colors.secondary,
                   ),
-                  child: Text('Back to Home',
+                  child: Text("Back to Home",
                       style: globalStyles.font.normal.copyWith(
                           color: const Color.fromARGB(235, 255, 255, 255))),
                 ),

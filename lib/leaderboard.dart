@@ -2,265 +2,448 @@ import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
-class Leaderboard extends StatelessWidget {
+enum NormalLevels {
+  RANKED,
+  CALCULATION20,
+  INTEGRAL,
+}
+
+class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key, required this.userId});
   final int userId;
 
   @override
-  Widget build(BuildContext context) {
-    //final ColorScheme colorScheme = ColorScheme.fromSeed(seedColor: globalStyles.colors.white)
-    final Color oddItemColor = globalStyles.colors.primary;
-    final Color evenItemColor = globalStyles.colors.secondary;
-    const int tabsCount = 2;
-    const List<String> titles = <String>["Friends", "Global"];
-    final BoxDecoration tabStyle =
-        BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
-      BoxShadow(
-          color: const Color.fromARGB(84, 0, 0, 0),
-          offset: Offset(1, 3),
-          blurRadius: 5,
-          blurStyle: BlurStyle.inner)
-    ]);
+  State<Leaderboard> createState() => _LeaderboardState();
+}
 
-    return DefaultTabController(
-      initialIndex: 1,
-      length: tabsCount,
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 23,
-          backgroundColor: globalStyles.colors.primary,
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+class _LeaderboardState extends State<Leaderboard>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _pageController = PageController();
+
+    _tabController.addListener(() {
+      if (!_pageController.position.isScrollingNotifier.value) {
+        _pageController.animateToPage(
+          _tabController.index,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  NormalLevels Selected = NormalLevels.RANKED;
+  int selectedTabIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    const int tabsCount = 2;
+    const List<String> titles = <String>["FRIENDS", "GLOBAL"];
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 228, 228),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  globalStyles.colors.accent2,
+                  globalStyles.colors.accent3,
+                  globalStyles.colors.accent,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Column(
                 children: [
-                  Container(
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.black87),
-                      onPressed: () async {
-                        await Navigator.popAndPushNamed(context, "/");
-                      },
-                    ),
+                  // Header section
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(8, 12, 16, 16),
+                  //child:
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: Colors.white, size: 24),
+                        onPressed: () =>
+                            Navigator.popAndPushNamed(context, "/"),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Math Battle Leaderboard",
+                          style: globalStyles.font.header.copyWith(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                  // Text(
-                  //   "Back",
-                  //   style: globalStyles.font.header,
-                  // ),
                 ],
               ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    "Math Battle Leaderboard",
-                    style: globalStyles.font.header,
-                    textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                // Left sidebar with buttons
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    color: globalStyles.colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5,
+                        offset: Offset(2, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      _buildSidebarButton(
+                        "Ranked",
+                        Icons.military_tech,
+                        () {
+                          setState(() {
+                            Selected = NormalLevels.RANKED;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      _buildSidebarButton(
+                        "Cal x20",
+                        Icons.calculate,
+                        () {
+                          setState(() {
+                            Selected = NormalLevels.CALCULATION20;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      _buildSidebarButton(
+                        "Integral",
+                        Icons.functions,
+                        () {
+                          setState(() {
+                            Selected = NormalLevels.INTEGRAL;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 10),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(width: 48), // TODO change this T-T
-            ],
-          ),
-          notificationPredicate: (ScrollNotification notification) {
-            return notification.depth == 1;
-          },
-          scrolledUnderElevation: 4.0,
-          shadowColor: Theme.of(context).shadowColor,
-          bottom: TabBar(
-            dividerColor: globalStyles.colors.primary,
-            labelColor: globalStyles.colors.white,
-            labelStyle: globalStyles.font.header
-                .copyWith(color: globalStyles.colors.white),
-            unselectedLabelColor: globalStyles.colors.black,
-            unselectedLabelStyle: globalStyles.font.header,
-            indicatorColor: globalStyles.colors.secondary,
-            indicator: BoxDecoration(
-              color: globalStyles.colors.secondary,
-              borderRadius: BorderRadius.circular(5),
+                // tab and leaderboard
+                Expanded(
+                  child: Column(
+                    children: [
+                      // Custom tabs
+                      Container(
+                        padding: EdgeInsets.all(0),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildCustomTab(
+                                Icons.people_outline,
+                                titles[0],
+                                selectedTabIndex == 0,
+                                screenWidth,
+                                () async {
+                                  setState(() => selectedTabIndex = 0);
+                                  await _pageController.animateToPage(
+                                    0,
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildCustomTab(
+                                Icons.emoji_events_outlined,
+                                titles[1],
+                                selectedTabIndex == 1,
+                                screenWidth,
+                                () async {
+                                  setState(() => selectedTabIndex = 1);
+                                  await _pageController.animateToPage(
+                                    1,
+                                    duration: Duration(milliseconds: 200),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Content area
+                      Expanded(
+                        child: PageView(
+                          controller: _pageController,
+                          onPageChanged: (index) {
+                            setState(() => selectedTabIndex = index);
+                          },
+                          children: [
+                            LeaderboardListDisplay(title: titles[0]),
+                            LeaderboardListDisplay(title: titles[1]),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            tabs: <Widget>[
-              Tab(
-                height: 23,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.people_outline,
-                      size: 15.0,
-                    ),
-                    SizedBox(
-                        width:
-                            8), // Adds some space between the icon and the text
-                    Text(
-                      titles[0],
-                      style: globalStyles.font.normal,
-                    ),
-                  ],
-                ),
-              ),
-              Tab(
-                height: 23,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/icons/trophy_icon.svg",
-                      width: 15.0,
-                      height: 15.0,
-                    ),
-                    SizedBox(
-                        width:
-                            10), // Adds some space between the icon and the text
-                    Text(
-                      titles[1],
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSidebarButton(
+    String text,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
+    NormalLevels buttonType;
+    switch (text) {
+      case "Ranked":
+        buttonType = NormalLevels.RANKED;
+      case "Cal x20":
+        buttonType = NormalLevels.CALCULATION20;
+      case "Integral":
+        buttonType = NormalLevels.INTEGRAL;
+      default:
+        buttonType = NormalLevels.RANKED;
+    }
+
+    Color buttonColor = Selected == buttonType
+        ? globalStyles.colors.secondary // Selected color
+        : globalStyles.colors.primary;
+
+    return Container(
+      width: 100,
+      height: 25,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonColor,
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          fixedSize: Size.fromWidth(90),
         ),
-        backgroundColor: Color.fromARGB(255, 228, 228, 228),
-        body: TabBarView(
-          children: <Widget>[
-            ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              itemCount: 25,
-              itemBuilder: (BuildContext context, index) {
-                final int displayIndex = index + 1;
-
-                Color containerColor;
-                String? medalIcon;
-                if (displayIndex == 1) {
-                  containerColor = const Color.fromARGB(255, 255, 222, 122);
-                  medalIcon = "assets/icons/gold_medal.svg";
-                } else if (displayIndex == 2) {
-                  containerColor = const Color.fromARGB(255, 209, 209, 209);
-                  medalIcon = "assets/icons/silver_medal.svg";
-                } else if (displayIndex == 3) {
-                  containerColor = const Color.fromARGB(255, 215, 142, 115);
-                  medalIcon = "assets/icons/bronze_medal.svg";
-                } else {
-                  containerColor = globalStyles.colors.white;
-                }
-
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(bottom: 8, top: 4),
-                    decoration: BoxDecoration(
-                      color: containerColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                    child: Row(
-                      children: [
-                        if (medalIcon !=
-                            null) // Add the medal icon for the top three
-                          SvgPicture.asset(
-                            medalIcon,
-                            width: 20,
-                            height: 20,
-                          )
-                        else // Display the rank number for the rest
-                          Container(
-                            width: 20,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "$displayIndex",
-                              style: globalStyles.font.header2,
-                            ),
-                          ),
-                        SizedBox(width: 14),
-                        Expanded(
-                          child: Row(children: [
-                            Image.asset(
-                              "assets/images/main_logo.png",
-                              height: 50,
-                            ),
-                            SizedBox(width: 14),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  titles[0],
-                                  style: globalStyles.font.normal,
-                                ),
-                                Text("Time: 0.00001s")
-                              ],
-                            )
-                          ]),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(icon, color: Colors.white, size: 15),
+            SizedBox(
+              width: 3,
             ),
-            ListView.builder(
-              itemCount: 25,
-              itemBuilder: (BuildContext context, index) {
-                final int displayIndex = index + 1;
-                Color containerColor;
-                String? medalIcon;
-                if (displayIndex == 1) {
-                  containerColor = Colors.amber;
-                  medalIcon = "assets/icons/gold_medal.svg";
-                } else if (displayIndex == 2) {
-                  containerColor = const Color.fromARGB(255, 167, 167, 167);
-                  medalIcon = "assets/icons/silver_medal.svg";
-                } else if (displayIndex == 3) {
-                  containerColor = const Color.fromARGB(255, 178, 113, 90);
-                  medalIcon = "assets/icons/bronze_medal.svg";
-                } else {
-                  containerColor = globalStyles.colors.white;
-                }
-
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 10, top: 10),
-                    decoration: BoxDecoration(
-                      color: containerColor,
-                      borderRadius: BorderRadius.circular(
-                          8), // Optional: add rounded corners
-                    ),
-                    padding: EdgeInsets.all(
-                        16), // Optional: add padding inside the container
-                    child: Row(
-                      children: [
-                        if (medalIcon !=
-                            null) // Add the medal icon for the top three
-                          SvgPicture.asset(
-                            medalIcon,
-                            width: 24,
-                            height: 24,
-                          )
-                        else // Display the rank number for the rest
-                          Text(
-                            "$displayIndex",
-                            style: globalStyles.font.button,
-                          ),
-                        SizedBox(
-                            width:
-                                4), // Add some space between icon/number and text
-                        Expanded(
-                          child: Text(
-                            titles[1],
-                            style: globalStyles.font.button,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+            Text(
+              text,
+              style: globalStyles.font.normal.copyWith(
+                color: Colors.white,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCustomTab(
+    IconData icon,
+    String title,
+    bool isSelected,
+    double screenWidth,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 25,
+        alignment:
+            title == "FRIENDS" ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color:
+                isSelected ? globalStyles.colors.secondary : Colors.transparent,
+            borderRadius: BorderRadius.horizontal(
+              left: title == "FRIENDS" ? Radius.circular(12) : Radius.zero,
+              right: title == "GLOBAL" ? Radius.circular(12) : Radius.zero,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 15,
+                color: isSelected ? Colors.white : globalStyles.colors.black,
+              ),
+              SizedBox(width: 8),
+              Text(
+                title,
+                style: globalStyles.font.normal.copyWith(
+                  color: isSelected ? Colors.white : globalStyles.colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LeaderboardListDisplay extends StatelessWidget {
+  const LeaderboardListDisplay({
+    super.key,
+    required this.title, //TEMPORARY
+  });
+  final String title; //TEMPORARY
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      itemCount: 25,
+      itemBuilder: (BuildContext context, index) {
+        final int displayIndex = index + 1;
+
+        Color containerColor;
+        String? medalIcon;
+        if (displayIndex == 1) {
+          containerColor = const Color.fromARGB(255, 255, 222, 122);
+          medalIcon = "assets/icons/gold_medal.svg";
+        } else if (displayIndex == 2) {
+          containerColor = const Color.fromARGB(255, 209, 209, 209);
+          medalIcon = "assets/icons/silver_medal.svg";
+        } else if (displayIndex == 3) {
+          containerColor = const Color.fromARGB(255, 215, 142, 115);
+          medalIcon = "assets/icons/bronze_medal.svg";
+        } else if (displayIndex % 2 == 0) {
+          containerColor = globalStyles.colors.white;
+        } else {
+          containerColor = const Color.fromARGB(255, 235, 251, 254);
+        }
+
+        return Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(bottom: 8, top: 4),
+          decoration: BoxDecoration(
+            color: containerColor,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 5,
+                offset: Offset(4, 2),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+          child: Row(
+            children: [
+              if (medalIcon != null) // Add the medal icon for the top three
+                SvgPicture.asset(
+                  medalIcon,
+                  width: 20,
+                  height: 20,
+                )
+              else // Display the rank number for the rest
+                Container(
+                  width: 20,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "$displayIndex",
+                    style: globalStyles.font.header2,
+                  ),
+                ),
+              SizedBox(width: 14),
+              Expanded(
+                child: Row(children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      "assets/images/main_logo.png",
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(width: 14),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: globalStyles.font.normal,
+                      ),
+                      Text(
+                        "Time: 0.00001s",
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 83, 103, 113)),
+                      )
+                    ],
+                  )
+                ]),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
-import 'dart:async';
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
+import "dart:async";
 
 class NormalGameScreen extends StatefulWidget {
   const NormalGameScreen({super.key, this.isIntegral = false});
@@ -94,8 +94,8 @@ class _NormalGameScreen extends State<NormalGameScreen> {
         // Save the final time to a global variable or a service
         // For example, using a global variable:
         finalTime = _time;
-        await Navigator.pushNamed(context, '/game-over', arguments: {
-          'finalTime': _time,
+        await Navigator.pushNamed(context, "/game-over", arguments: {
+          "finalTime": _time,
         });
         //should finish the game
       }
@@ -216,7 +216,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                         children: [
                           const SizedBox(width: 20),
                           Text(
-                            'Time: $_time',
+                            "Time: $_time",
                             style: globalStyles.font.header,
                           ),
 
@@ -237,7 +237,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                               ),
                             ),
                             child: const Text(
-                              'Erase',
+                              "Erase",
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors
@@ -251,7 +251,7 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                             onPressed: () {
                               equationIndexIncrement();
                             },
-                            child: Text('+'),
+                            child: Text("+"),
                           ),
                         ],
                       ),
@@ -270,10 +270,10 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                 IconButton(
                     icon: Icon(Icons.arrow_back, color: Colors.black87),
                     onPressed: () async {
-                      await Navigator.popAndPushNamed(context, '/normal');
+                      await Navigator.popAndPushNamed(context, "/normal");
                     }),
                 Text(
-                  'Quit',
+                  "Quit",
                   style: globalStyles.font.header,
                 ),
               ],

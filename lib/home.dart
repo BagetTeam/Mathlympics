@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/global_styles.dart";
@@ -18,16 +19,28 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   //late Animation<double> _animation;
+  late double screenWidth;
+  late double screenHeight;
 
   @override
   void initState() {
     super.initState();
 
-    timeDilation = 2.0;
+    if (!kReleaseMode) {
+      timeDilation = 2.0;
+    }
     _controller = AnimationController(
       duration: const Duration(seconds: 30),
       vsync: this,
     )..repeat(reverse: true);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mediaQuery = MediaQuery.of(context);
+      setState(() {
+        screenWidth = mediaQuery.size.width;
+        screenHeight = mediaQuery.size.height;
+      });
+    });
   }
 
   // @override
@@ -38,8 +51,9 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _controller.stop();
     _controller.dispose();
-    timeDilation = 1.0;
+    timeDilation = 1.0; // Reset in case it's set during debug
     super.dispose();
   }
 
@@ -51,11 +65,13 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
-        final screenWidth = MediaQuery.of(context).size.width;
-        final screenHeight = MediaQuery.of(context).size.height;
+        final left = xCalculation(_controller.value) * screenWidth;
+        final top = yCalculation(_controller.value) * screenHeight;
+
+        // Return only the child if not inside a Stack
         return Positioned(
-          left: xCalculation(_controller.value) * screenWidth,
-          top: yCalculation(_controller.value) * screenHeight,
+          left: left,
+          top: top,
           child: Opacity(opacity: 0.2, child: child),
         );
       },

@@ -19,13 +19,23 @@ Future<void> setUp() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
-      url: dotenv.env['URL']!, anonKey: dotenv.env['ANONKEY']!);
+      url: dotenv.env["URL"]!, anonKey: dotenv.env["ANONKEY"]!);
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack,
-      overlays: []);
+  await SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.immersiveSticky,
+  );
+
+  await SystemChrome.setSystemUIChangeCallback(
+      (systemOverlaysAreVisible) async {
+    if (systemOverlaysAreVisible) {
+      Future.delayed(const Duration(seconds: 2), () async {
+        await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      });
+    }
+  });
 }
 
 void main() async {
@@ -66,7 +76,7 @@ class MyApp extends StatelessWidget {
         "/shop": (context) => const LoginPage(), // TODO: replace by shop
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/game-over') {
+        if (settings.name == "/game-over") {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) {

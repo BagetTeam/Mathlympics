@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:mathlympics/global_styles.dart';
+import "package:flutter/material.dart";
+import "package:mathlympics/global_styles.dart";
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
