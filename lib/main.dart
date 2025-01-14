@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
             const NormalGameScreen(isIntegral: true),
         "/login": (context) => const LoginPage(),
         "/register": (context) => const RegisterPage(),
+        "/confirm-email": (context) => const ConfirmEmail(),
         "/forgot-pass": (context) => const RegisterPage(), // TODO: forgot page
         "/account": (context) => const LoginPage(), // TODO: replace by account
         "/shop": (context) => const LoginPage(), // TODO: replace by shop
