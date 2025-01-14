@@ -50,9 +50,9 @@ class _LoginFormState extends State<LoginForm> {
           final res = await Supabase.instance.client.auth
               .signInWithPassword(email: email, password: password);
 
-          if (res.user == null || res.session == null) {
+          if (res.session == null) {
             setState(() {
-              _errorMsg = "Email or password incorrect";
+              _errorMsg = "Oops, something went wrong";
             });
           } else {
             String path = "/";
@@ -69,7 +69,7 @@ class _LoginFormState extends State<LoginForm> {
           }
         } on Exception {
           setState(() {
-            _errorMsg = "Oops, something went wrong";
+            _errorMsg = "Email or password incorrect";
           });
         }
       };
