@@ -19,7 +19,20 @@ const globalStyles = (
     accent3: Color.fromARGB(255, 243, 184, 88),
   ),
   font: (
-    size: 16.0,
+    xs: (size: 12.0, lineHeight: 16.0),
+    sm: (size: 14.0, lineHeight: 20.0),
+    base: (size: 16.0, lineHeight: 24.0),
+    lg: (size: 18.0, lineHeight: 28.0),
+    xl: (size: 20.0, lineHeight: 28.0),
+    xl2: (size: 24.0, lineHeight: 32.0),
+    xl3: (size: 30.0, lineHeight: 36.0),
+    xl4: (size: 36.0, lineHeight: 40.0),
+    xl5: (size: 48.0),
+    xl6: (size: 60.0),
+    xl7: (size: 72.0),
+    xl8: (size: 96.0),
+    xl9: (size: 128.0),
+
     title: TextStyle(
       fontSize: 40, // Set the font size
       fontFamily:
