@@ -61,20 +61,12 @@ class _LeaderboardState extends State<Leaderboard>
           Container(
             padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  globalStyles.colors.accent2,
-                  globalStyles.colors.accent3,
-                  globalStyles.colors.accent,
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
+              color: globalStyles.colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: Offset(130, 2),
                 ),
               ],
             ),
@@ -89,7 +81,7 @@ class _LeaderboardState extends State<Leaderboard>
                     children: [
                       IconButton(
                         icon: Icon(Icons.arrow_back,
-                            color: Colors.white, size: 24),
+                            color: globalStyles.colors.black, size: 24),
                         onPressed: () =>
                             Navigator.popAndPushNamed(context, "/"),
                       ),
@@ -97,7 +89,7 @@ class _LeaderboardState extends State<Leaderboard>
                         child: Text(
                           "Math Battle Leaderboard",
                           style: globalStyles.font.header.copyWith(
-                            color: Colors.white,
+                            color: globalStyles.colors.black,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -125,7 +117,7 @@ class _LeaderboardState extends State<Leaderboard>
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
-                        offset: Offset(2, 0),
+                        offset: Offset(2, 7),
                       ),
                     ],
                   ),
@@ -171,8 +163,7 @@ class _LeaderboardState extends State<Leaderboard>
                       // Custom tabs
                       Container(
                         padding: EdgeInsets.all(0),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        margin: EdgeInsets.fromLTRB(20, 20, 20, 5),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
@@ -373,15 +364,13 @@ class LeaderboardListDisplay extends StatelessWidget {
         } else if (displayIndex == 3) {
           containerColor = const Color.fromARGB(255, 215, 142, 115);
           medalIcon = "assets/icons/bronze_medal.svg";
-        } else if (displayIndex % 2 == 0) {
-          containerColor = globalStyles.colors.white;
         } else {
-          containerColor = const Color.fromARGB(255, 235, 251, 254);
+          containerColor = Colors.white;
         }
 
         return Container(
           alignment: Alignment.center,
-          margin: EdgeInsets.only(bottom: 8, top: 4),
+          margin: EdgeInsets.only(bottom: 4, top: 4),
           decoration: BoxDecoration(
             color: containerColor,
             borderRadius: BorderRadius.circular(12),
