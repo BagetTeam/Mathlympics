@@ -29,7 +29,7 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _isError = false;
+  String? _errorMsg;
 
   @override
   void dispose() {
@@ -52,14 +52,24 @@ class _LoginFormState extends State<LoginForm> {
 
           if (res.user == null || res.session == null) {
             setState(() {
-              _isError = true;
+              _errorMsg = "Email or password incorrect";
             });
-          } else if (context.mounted) {
-            await Navigator.pushNamed(context, "/home");
+          } else {
+            String path = "/";
+
+            if (res.user?.emailConfirmedAt == null) {
+              await Supabase.instance.client.auth
+                  .resend(email: email, type: OtpType.signup);
+              path = "/confirm-email";
+            }
+
+            if (context.mounted) {
+              await Navigator.pushNamed(context, path);
+            }
           }
         } on Exception {
           setState(() {
-            _isError = true;
+            _errorMsg = "Oops, something went wrong";
           });
         }
       };
@@ -89,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
                     return msg;
                   },
                   decoration: InputDecoration(
-                      errorText: _isError ? "Wrong email" : null,
+                      errorText: _errorMsg,
                       labelText: "Email",
                       border: UnderlineInputBorder())),
               TextFormField(
@@ -102,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
                     return msg;
                   },
                   decoration: InputDecoration(
-                      errorText: _isError ? "Wrong password" : null,
+                      errorText: _errorMsg,
                       labelText: "Password",
                       border: UnderlineInputBorder())),
               Align(
