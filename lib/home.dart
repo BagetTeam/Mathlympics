@@ -1,7 +1,9 @@
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
+import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
   const Home({
@@ -220,7 +222,17 @@ class ButtonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = UserState.of(context).user;
+
     VoidCallback handleClick(String path) => () async {
+          if (path == "/leaderboard" || path == "/ranked") {
+            if (user == null) {
+              path = "/login";
+            } else if (user.emailConfirmedAt == null) {
+              path = "/confirm-email";
+            }
+          }
+
           await Navigator.pushNamed(context, path);
         };
 
@@ -235,6 +247,7 @@ class ButtonSection extends StatelessWidget {
           ),
         ),
         backgroundColor: WidgetStatePropertyAll(Colors.transparent));
+
     final BoxDecoration buttonBoxStyle =
         BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [
       BoxShadow(
