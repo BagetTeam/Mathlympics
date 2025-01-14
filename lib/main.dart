@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/leaderboard.dart";
 import "package:mathlympics/auth/login.dart";
 import "package:mathlympics/auth/register.dart";
@@ -43,50 +44,81 @@ void main() async {
   runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      final Session? session = data.session;
+
+      final newUser = switch (event) {
+        AuthChangeEvent.signedIn ||
+        AuthChangeEvent.initialSession =>
+          session?.user,
+        _ => null,
+      };
+      setState(() {
+        user = newUser;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Mathlympics",
-      theme: ThemeData(
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
-          useMaterial3: true,
-          fontFamily: "Acme"),
-      initialRoute: "/",
-      routes: {
-        "/": (context) => Home(
-              title: "Mathlympics",
-              logo: Logos.appLogo(),
-            ),
-        "/leaderboard": (context) => const Leaderboard(userId: 0),
-        "/play": (context) => const PlayScreen(),
-        "/normal": (context) => const PlayNormal(),
-        "/ranked": (context) => const PlayRanked(),
-        "/normal/cal20": (context) => const NormalGameScreen(),
-        "/normal/integrals": (context) =>
-            const NormalGameScreen(isIntegral: true),
-        "/login": (context) => const LoginPage(),
-        "/register": (context) => const RegisterPage(),
-        "/confirm-email": (context) => const ConfirmEmail(),
-        "/forgot-pass": (context) => const RegisterPage(), // TODO: forgot page
-        "/account": (context) => const LoginPage(), // TODO: replace by account
-        "/shop": (context) => const LoginPage(), // TODO: replace by shop
-      },
-      onGenerateRoute: (settings) {
-        if (settings.name == "/game-over") {
-          final args = settings.arguments as Map<String, dynamic>;
-          return MaterialPageRoute(
-            builder: (context) {
-              return GameOverScreen(finalTime: args["finalTime"]);
-            },
-          );
-        }
-        return null;
-      },
-    );
+    return UserState(
+        user: user,
+        child: MaterialApp(
+          title: "Mathlympics",
+          theme: ThemeData(
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: globalStyles.colors.primary),
+              useMaterial3: true,
+              fontFamily: "Acme"),
+          initialRoute: "/",
+          routes: {
+            "/": (context) => Home(
+                  title: "Mathlympics",
+                  logo: Logos.appLogo(),
+                ),
+            "/leaderboard": (context) => const Leaderboard(userId: 0),
+            "/play": (context) => const PlayScreen(),
+            "/normal": (context) => const PlayNormal(),
+            "/ranked": (context) => const PlayRanked(),
+            "/normal/cal20": (context) => const NormalGameScreen(),
+            "/normal/integrals": (context) =>
+                const NormalGameScreen(isIntegral: true),
+            "/login": (context) => const LoginPage(),
+            "/register": (context) => const RegisterPage(),
+            "/confirm-email": (context) => const ConfirmEmail(),
+            "/forgot-pass": (context) =>
+                const RegisterPage(), // TODO: forgot page
+            "/account": (context) =>
+                const LoginPage(), // TODO: replace by account
+            "/shop": (context) => const LoginPage(), // TODO: replace by shop
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == "/game-over") {
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return GameOverScreen(finalTime: args["finalTime"]);
+                },
+              );
+            }
+            return null;
+          },
+        ));
   }
 }
 

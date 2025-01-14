@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
+import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
@@ -205,12 +206,15 @@ class ButtonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VoidCallback handleClick(String path) => () async {
-          final auth = Supabase.instance.client.auth;
+    User? user = UserState.of(context).user;
 
-          if (auth.currentSession == null &&
-              (path == "/ranked" || path == "/leaderboard")) {
-            path = auth.currentUser == null ? "/confirm-email" : "/login";
+    VoidCallback handleClick(String path) => () async {
+          if (path == "/leaderboard" || path == "/ranked") {
+            if (user == null) {
+              path = "/login";
+            } else if (user.emailConfirmedAt == null) {
+              path = "/confirm-email";
+            }
           }
 
           await Navigator.pushNamed(context, path);
