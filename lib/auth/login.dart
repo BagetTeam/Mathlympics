@@ -79,7 +79,6 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
         key: _formKey,
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 20.0, children: [
-          Text("Mathlympics", style: globalStyles.font.header),
           Column(
             spacing: 10.0,
             children: [

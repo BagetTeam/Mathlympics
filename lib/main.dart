@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
@@ -53,18 +55,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? user;
+  StreamSubscription<AuthState>? listener;
 
   @override
   void initState() {
     super.initState();
 
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    final stateListener =
+        Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
       final AuthChangeEvent event = data.event;
+      // final AuthResponse res =
+      //    await Supabase.instance.client.auth.refreshSession();
       final Session? session = data.session;
 
       final newUser = switch (event) {
         AuthChangeEvent.signedIn ||
-        AuthChangeEvent.initialSession =>
+        AuthChangeEvent.initialSession ||
+        AuthChangeEvent.tokenRefreshed ||
+        AuthChangeEvent.userUpdated =>
           session?.user,
         _ => null,
       };
@@ -72,6 +80,16 @@ class _MyAppState extends State<MyApp> {
         user = newUser;
       });
     });
+
+    setState(() {
+      listener = stateListener;
+    });
+  }
+
+  @override
+  void dispose() async {
+    await listener?.cancel();
+    super.dispose();
   }
 
   @override

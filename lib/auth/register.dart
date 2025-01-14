@@ -69,7 +69,6 @@ class _RegisterFormState extends State<RegisterForm> {
     return Form(
         key: _formKey,
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 20.0, children: [
-          Text("Register", style: globalStyles.font.header),
           Column(
             spacing: 10.0,
             children: [
