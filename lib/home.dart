@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/global_styles.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
   const Home({
@@ -205,8 +206,11 @@ class ButtonSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VoidCallback handleClick(String path) => () async {
-          if (path == "/ranked" || path == "/leaderboard") {
-            path = "/login";
+          final auth = Supabase.instance.client.auth;
+
+          if (auth.currentSession == null &&
+              (path == "/ranked" || path == "/leaderboard")) {
+            path = auth.currentUser == null ? "/confirm-email" : "/login";
           }
 
           await Navigator.pushNamed(context, path);
