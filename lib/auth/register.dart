@@ -55,12 +55,7 @@ class _RegisterFormState extends State<RegisterForm> {
         }
 
         if (context.mounted) {
-          String path = "/home";
-          if (user.emailConfirmedAt == null) {
-            path = "/confirm-email";
-          }
-
-          await Navigator.pushNamed(context, path);
+          await Navigator.pushNamed(context, "/confirm-email");
         }
       };
 
@@ -147,12 +142,12 @@ class ConfirmEmail extends StatelessWidget {
           Text("Welcome!",
               style: TextStyle(fontSize: globalStyles.font.xl3.size)),
           Text(
-              "Your account has been created, check your inbox to confirm your email."),
+              "Your account has been created, remember your email in case you forget your password!"),
           GestureDetector(
               onTap: () async {
-                await Navigator.pushNamed(context, "/login");
+                await Navigator.pushNamed(context, "/");
               },
-              child: Text("Back to login",
+              child: Text("Back to home",
                   style: TextStyle(color: Colors.lightBlue)))
         ])));
   }

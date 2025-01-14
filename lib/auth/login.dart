@@ -50,21 +50,13 @@ class _LoginFormState extends State<LoginForm> {
           final res = await Supabase.instance.client.auth
               .signInWithPassword(email: email, password: password);
 
-          if (res.session == null) {
+          if (res.session == null || res.user == null) {
             setState(() {
               _errorMsg = "Oops, something went wrong";
             });
           } else {
-            String path = "/";
-
-            if (res.user?.emailConfirmedAt == null) {
-              await Supabase.instance.client.auth
-                  .resend(email: email, type: OtpType.signup);
-              path = "/confirm-email";
-            }
-
             if (context.mounted) {
-              await Navigator.pushNamed(context, path);
+              await Navigator.pushNamed(context, "/");
             }
           }
         } on Exception {
