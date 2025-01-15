@@ -172,38 +172,41 @@ class ProfileSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 10.0,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 10),
                 width: constraints.maxWidth * 0.25,
                 child: Image.asset(
                   "assets/images/main_logo.png",
                   fit: BoxFit.contain,
                 ),
               ),
-              Text(
-                "NanoScience",
-                style: globalStyles.font.header,
-              ),
-              Text(
-                "Level 99999",
-                style: globalStyles.font.normal,
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.15,
-              ),
-              Text(
-                "Total Wins: 999999999",
-                style: globalStyles.font.normal,
-              ),
-              Text(
-                "Global Rank: #1",
-                style: globalStyles.font.normal,
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.15,
-              ),
+              Column(children: [
+                Text(
+                  "NanoScience",
+                  style: globalStyles.font.header,
+                ),
+                Text(
+                  "Level 99999",
+                  style: globalStyles.font.normal,
+                ),
+              ]),
+              Column(children: [
+                Text(
+                  "Total Wins: 999999999",
+                  style: globalStyles.font.normal,
+                ),
+                Text(
+                  "Global Rank: #1",
+                  style: globalStyles.font.normal,
+                ),
+              ]),
               ElevatedButton(onPressed: () {}, child: Text("Settings")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await Supabase.instance.client.auth.signOut();
+                  },
+                  child: Text("Logout (to be removed)")),
             ],
           );
         }),
