@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
+import "package:mathlympics/models.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class RegisterPage extends StatelessWidget {
@@ -53,6 +54,19 @@ class _RegisterFormState extends State<RegisterForm> {
           });
           return;
         }
+
+        final Iterable<UserModel> data =
+            (await supabase.from("users").select().eq("id", user.id))
+                .map((hashMap) => UserModel.from(hashMap));
+
+        if (data.isNotEmpty) {
+          setState(() {
+            _errorMsg = "Account already exists";
+          });
+          return;
+        }
+
+        await Supabase.instance.client.from("users").insert({});
 
         if (context.mounted) {
           await Navigator.pushNamed(context, "/confirm-email");
