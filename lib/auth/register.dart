@@ -43,33 +43,28 @@ class _RegisterFormState extends State<RegisterForm> {
         final email = _emailController.text;
         final password = _passwordController.text;
 
-        final res =
-            await supabase.auth.signUp(email: email, password: password);
+        try {
+          final res =
+              await supabase.auth.signUp(email: email, password: password);
 
-        final user = res.user;
+          final user = res.user;
 
-        if (user == null) {
+          if (user == null) {
+            setState(() {
+              _errorMsg = "Oops, something went wrong";
+            });
+            return;
+          }
+
+          await supabase.from("users").insert({});
+
+          if (context.mounted) {
+            await Navigator.pushNamed(context, "/confirm-email");
+          }
+        } on AuthException catch (e) {
           setState(() {
-            _errorMsg = "Oops, something went wrong";
+            _errorMsg = e.message;
           });
-          return;
-        }
-
-        final Iterable<UserModel> data =
-            (await supabase.from("users").select().eq("id", user.id))
-                .map((hashMap) => UserModel.from(hashMap));
-
-        if (data.isNotEmpty) {
-          setState(() {
-            _errorMsg = "Account already exists";
-          });
-          return;
-        }
-
-        await supabase.from("users").insert({});
-
-        if (context.mounted) {
-          await Navigator.pushNamed(context, "/confirm-email");
         }
       };
 
