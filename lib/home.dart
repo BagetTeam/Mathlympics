@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
-import "package:mathlympics/main.dart";
+import "package:mathlympics/models.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
@@ -45,12 +45,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       });
     });
   }
-
-  // @override
-  // void didUpdateWidget(Home oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   _controller.duration = const Duration(seconds: 15);
-  // }
 
   @override
   void dispose() {
@@ -157,12 +151,44 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class ProfileSection extends StatelessWidget {
+class ProfileSection extends StatefulWidget {
   const ProfileSection({
     super.key,
     required this.user,
   });
   final User? user;
+
+  @override
+  State<ProfileSection> createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  String? username;
+  int? userLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    if (widget.user != null) {
+      final data =
+          (await supabase.from("users").select().eq("id", widget.user!.id))
+              .map((hashMap) => UserModel.from(hashMap))
+              .single;
+      setState(() {
+        username = data.displayName;
+        userLevel = data.level;
+      });
+    } else {
+      setState(() {
+        username = "Guest965";
+        userLevel = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,40 +203,41 @@ class ProfileSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 10.0,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 10),
                 width: constraints.maxWidth * 0.25,
                 child: Image.asset(
                   "assets/images/main_logo.png",
                   fit: BoxFit.contain,
                 ),
               ),
-              Text(
-                "NanoScience",
-                style: globalStyles.font.header,
-              ),
-              Text(
-                "Level 99999",
-                style: globalStyles.font.normal,
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.15,
-              ),
-              Text(
-                "Total Wins: 999999999",
-                style: globalStyles.font.normal,
-              ),
-              Text(
-                "Global Rank: #1",
-                style: globalStyles.font.normal,
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.15,
-              ),
+              Column(children: [
+                Text(
+                  username ?? "Loading",
+                  style: globalStyles.font.header,
+                ),
+                Text(
+                  "Level ${userLevel?.toString() ?? '...'}",
+                  style: globalStyles.font.normal,
+                ),
+              ]),
+              Column(children: [
+                Text(
+                  "Total Wins: 999999999",
+                  style: globalStyles.font.normal,
+                ),
+                Text(
+                  "Global Rank: #1",
+                  style: globalStyles.font.normal,
+                ),
+              ]),
+              ElevatedButton(onPressed: () {}, child: Text("Settings")),
               ElevatedButton(
-                  onPressed: () {},
-                  child: user == null ? Text("Log in") : Text("Settings")),
+                  onPressed: () async {
+                    await supabase.auth.signOut();
+                  },
+                  child: Text("Logout (to be removed)")),
             ],
           );
         }),
@@ -239,7 +266,6 @@ class ButtonSection extends StatelessWidget {
           }
           await Navigator.pushNamed(context, path);
         };
-
     final ButtonStyle buttonStyle = ButtonStyle(
         fixedSize: WidgetStateProperty.all(Size(500, 35)),
         textStyle: WidgetStateProperty.all(globalStyles.font.button),

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
+import "package:mathlympics/models.dart";
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -47,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
         final password = _passwordController.text;
 
         try {
-          final res = await Supabase.instance.client.auth
+          final res = await supabase.auth
               .signInWithPassword(email: email, password: password);
 
           if (res.session == null || res.user == null) {
