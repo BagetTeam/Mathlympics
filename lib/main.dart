@@ -7,6 +7,7 @@ import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/leaderboard.dart";
 import "package:mathlympics/auth/login.dart";
 import "package:mathlympics/auth/register.dart";
+import "package:mathlympics/models.dart";
 import "package:mathlympics/normal_game_screen.dart";
 import "package:mathlympics/play_screen.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -62,11 +63,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    final stateListener =
-        Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
+    final stateListener = supabase.auth.onAuthStateChange.listen((data) async {
       final AuthChangeEvent event = data.event;
-      // final AuthResponse res =
-      //    await Supabase.instance.client.auth.refreshSession();
       final Session? session = data.session;
 
       final newUser = switch (event) {

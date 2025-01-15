@@ -43,8 +43,8 @@ class _RegisterFormState extends State<RegisterForm> {
         final email = _emailController.text;
         final password = _passwordController.text;
 
-        final res = await Supabase.instance.client.auth
-            .signUp(email: email, password: password);
+        final res =
+            await supabase.auth.signUp(email: email, password: password);
 
         final user = res.user;
 
@@ -66,7 +66,7 @@ class _RegisterFormState extends State<RegisterForm> {
           return;
         }
 
-        await Supabase.instance.client.from("users").insert({});
+        await supabase.from("users").insert({});
 
         if (context.mounted) {
           await Navigator.pushNamed(context, "/confirm-email");

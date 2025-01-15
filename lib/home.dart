@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
+import "package:mathlympics/models.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
@@ -204,7 +205,7 @@ class ProfileSection extends StatelessWidget {
               ElevatedButton(onPressed: () {}, child: Text("Settings")),
               ElevatedButton(
                   onPressed: () async {
-                    await Supabase.instance.client.auth.signOut();
+                    await supabase.auth.signOut();
                   },
                   child: Text("Logout (to be removed)")),
             ],
