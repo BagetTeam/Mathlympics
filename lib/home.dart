@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
+import "package:mathlympics/main.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
@@ -82,6 +83,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    User? user = UserState.of(context).user;
     return Scaffold(
       backgroundColor: globalStyles.colors.white,
       body: Stack(
@@ -139,11 +141,12 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           ),
           Row(
             children: <Widget>[
-              Expanded(flex: 1, child: ProfileSection()),
+              Expanded(flex: 1, child: ProfileSection(user: user)),
               Expanded(
                 flex: 2,
                 child: ButtonSection(
                   label: widget.title,
+                  user: user,
                 ),
               ),
             ],
@@ -157,7 +160,9 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
 class ProfileSection extends StatelessWidget {
   const ProfileSection({
     super.key,
+    required this.user,
   });
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +208,9 @@ class ProfileSection extends StatelessWidget {
               SizedBox(
                 height: constraints.maxHeight * 0.15,
               ),
-              ElevatedButton(onPressed: () {}, child: Text("Settings")),
+              ElevatedButton(
+                  onPressed: () {},
+                  child: user == null ? Text("Log in") : Text("Settings")),
             ],
           );
         }),
@@ -216,23 +223,20 @@ class ButtonSection extends StatelessWidget {
   const ButtonSection({
     required this.label,
     super.key,
+    required this.user,
   });
 
   final String label;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
-    User? user = UserState.of(context).user;
-
     VoidCallback handleClick(String path) => () async {
           if (path == "/leaderboard" || path == "/ranked") {
             if (user == null) {
               path = "/login";
-            } else if (user.emailConfirmedAt == null) {
-              path = "/confirm-email";
             }
           }
-
           await Navigator.pushNamed(context, path);
         };
 

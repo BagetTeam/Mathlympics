@@ -40,6 +40,8 @@ Future<void> setUp() async {
   });
 }
 
+final supabase = Supabase.instance.client;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setUp();
