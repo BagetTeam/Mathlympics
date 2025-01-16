@@ -202,7 +202,17 @@ class ProfileSection extends StatelessWidget {
                   style: globalStyles.font.normal,
                 ),
               ]),
-              ElevatedButton(onPressed: () {}, child: Text("Settings")),
+              ElevatedButton(
+                  // FIX: just for testing, to be removed
+                  onPressed: () async {
+                    var data = (await supabase.from("users").select())
+                        .map((d) => UserModel.fromJson(d));
+
+                    for (var usr in data) {
+                      print(usr.toJson());
+                    }
+                  },
+                  child: Text("Settings")),
               ElevatedButton(
                   onPressed: () async {
                     await supabase.auth.signOut();
