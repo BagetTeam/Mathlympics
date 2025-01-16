@@ -14,6 +14,8 @@ typedef Json = Map<String, dynamic>;
 
 @JsonSerializable()
 class UserModel {
+  final name = "users";
+
   String id, createdAt, displayName;
   int level;
 
@@ -32,6 +34,8 @@ enum Mode { cal20, cal50, time30, time60, integ10, integ30, summ }
 
 @JsonSerializable()
 class TopScoresModel {
+  final name = "top_scores";
+
   int id;
   double score;
   String uid;
@@ -49,6 +53,8 @@ class TopScoresModel {
 
 @JsonSerializable()
 class LeaderboardModel {
+  final name = "leaderboard";
+
   int id;
   String uid;
   double topScore;
