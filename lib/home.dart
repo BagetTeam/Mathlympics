@@ -176,7 +176,7 @@ class _ProfileSectionState extends State<ProfileSection> {
     if (widget.user != null) {
       final data =
           (await supabase.from("users").select().eq("id", widget.user!.id))
-              .map((hashMap) => UserModel.from(hashMap))
+              .map((hashMap) => UserModel.fromJson(hashMap))
               .single;
       setState(() {
         username = data.displayName;
