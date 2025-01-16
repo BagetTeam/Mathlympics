@@ -11,9 +11,11 @@ class Home extends StatefulWidget {
     super.key,
     required this.title,
     this.logo = const SizedBox.shrink(),
+    //required this.id,
   });
   final String title;
   final Widget logo;
+  //final User? id;
 
   @override
   State<StatefulWidget> createState() => _Home();
@@ -83,6 +85,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    User? user = UserState.of(context).user;
     return Scaffold(
       backgroundColor: globalStyles.colors.white,
       body: Stack(
@@ -140,7 +143,11 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           ),
           Row(
             children: <Widget>[
-              Expanded(flex: 1, child: ProfileSection()),
+              Expanded(
+                  flex: 1,
+                  child: ProfileSection(
+                    user: user,
+                  )),
               Expanded(
                 flex: 2,
                 child: ButtonSection(
@@ -155,10 +162,45 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class ProfileSection extends StatelessWidget {
+class ProfileSection extends StatefulWidget {
   const ProfileSection({
     super.key,
+    required this.user,
   });
+  final User? user;
+
+  @override
+  State<ProfileSection> createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  String? username;
+  int? userLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    if (widget.user != null) {
+      final data =
+          (await supabase.from("users").select().eq("id", widget.user!.id))
+              .map((hashMap) => UserModel.from(hashMap))
+              .single;
+
+      setState(() {
+        username = data.displayName;
+        userLevel = data.level;
+      });
+    } else {
+      setState(() {
+        username = "Guest965";
+        userLevel = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,11 +226,11 @@ class ProfileSection extends StatelessWidget {
               ),
               Column(children: [
                 Text(
-                  "NanoScience",
+                  username ?? "Loading",
                   style: globalStyles.font.header,
                 ),
                 Text(
-                  "Level 99999",
+                  "Level ${userLevel?.toString() ?? '...'}",
                   style: globalStyles.font.normal,
                 ),
               ]),

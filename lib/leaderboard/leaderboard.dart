@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:mathlympics/models.dart";
 
 enum NormalLevels {
   RANKED,
@@ -10,7 +11,7 @@ enum NormalLevels {
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key, required this.userId});
-  final int userId;
+  final String userId;
 
   @override
   State<Leaderboard> createState() => _LeaderboardState();
@@ -220,8 +221,14 @@ class _LeaderboardState extends State<Leaderboard>
                             setState(() => selectedTabIndex = index);
                           },
                           children: [
-                            LeaderboardListDisplay(title: titles[0]),
-                            LeaderboardListDisplay(title: titles[1]),
+                            LeaderboardListDisplay(
+                              title: titles[0],
+                              userID: widget.userId,
+                            ),
+                            LeaderboardListDisplay(
+                              title: titles[1],
+                              userID: widget.userId,
+                            ),
                           ],
                         ),
                       ),
@@ -338,12 +345,33 @@ class _LeaderboardState extends State<Leaderboard>
   }
 }
 
-class LeaderboardListDisplay extends StatelessWidget {
+class LeaderboardListDisplay extends StatefulWidget {
   const LeaderboardListDisplay({
     super.key,
-    required this.title, //TEMPORARY
+    required this.userID,
+    required this.title, //temp
   });
+  final String userID;
   final String title; //TEMPORARY
+
+  @override
+  State<LeaderboardListDisplay> createState() => _LeaderboardListDisplay();
+}
+
+class _LeaderboardListDisplay extends State<LeaderboardListDisplay> {
+  String? username;
+  int? userLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final global_data = (await supabase.from("top_scores").select())
+        .map((hashMap) => UserModel.from(hashMap));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -417,7 +445,7 @@ class LeaderboardListDisplay extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        widget.title,
                         style: globalStyles.font.normal,
                       ),
                       Text(
