@@ -370,7 +370,7 @@ class _LeaderboardListDisplay extends State<LeaderboardListDisplay> {
 
   Future<void> _loadUserData() async {
     final global_data = (await supabase.from("top_scores").select())
-        .map((hashMap) => UserModel.from(hashMap));
+        .map((hashMap) => UserModel.fromJson(hashMap));
   }
 
   @override

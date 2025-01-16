@@ -48,12 +48,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     });
   }
 
-  // @override
-  // void didUpdateWidget(Home oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   _controller.duration = const Duration(seconds: 15);
-  // }
-
   @override
   void dispose() {
     _controller.stop();
@@ -152,6 +146,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
                 flex: 2,
                 child: ButtonSection(
                   label: widget.title,
+                  user: user,
                 ),
               ),
             ],
@@ -187,9 +182,8 @@ class _ProfileSectionState extends State<ProfileSection> {
     if (widget.user != null) {
       final data =
           (await supabase.from("users").select().eq("id", widget.user!.id))
-              .map((hashMap) => UserModel.from(hashMap))
+              .map((hashMap) => UserModel.fromJson(hashMap))
               .single;
-
       setState(() {
         username = data.displayName;
         userLevel = data.level;
@@ -244,7 +238,17 @@ class _ProfileSectionState extends State<ProfileSection> {
                   style: globalStyles.font.normal,
                 ),
               ]),
-              ElevatedButton(onPressed: () {}, child: Text("Settings")),
+              ElevatedButton(
+                  // FIX: just for testing, to be removed
+                  onPressed: () async {
+                    var data = (await supabase.from("users").select())
+                        .map((d) => UserModel.fromJson(d));
+
+                    for (var usr in data) {
+                      print(usr.toJson());
+                    }
+                  },
+                  child: Text("Settings")),
               ElevatedButton(
                   onPressed: () async {
                     await supabase.auth.signOut();
@@ -262,26 +266,22 @@ class ButtonSection extends StatelessWidget {
   const ButtonSection({
     required this.label,
     super.key,
+    required this.user,
   });
 
   final String label;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
-    User? user = UserState.of(context).user;
-
     VoidCallback handleClick(String path) => () async {
           if (path == "/leaderboard" || path == "/ranked") {
             if (user == null) {
               path = "/login";
-            } else if (user.emailConfirmedAt == null) {
-              path = "/confirm-email";
             }
           }
-
           await Navigator.pushNamed(context, path);
         };
-
     final ButtonStyle buttonStyle = ButtonStyle(
         fixedSize: WidgetStateProperty.all(Size(500, 35)),
         textStyle: WidgetStateProperty.all(globalStyles.font.button),

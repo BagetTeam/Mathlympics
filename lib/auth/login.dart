@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:mathlympics/models.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -59,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
               await Navigator.pushNamed(context, "/");
             }
           }
-        } on Exception {
+        } on AuthException {
           setState(() {
             _errorMsg = "Email or password incorrect";
           });
