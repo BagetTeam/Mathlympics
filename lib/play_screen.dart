@@ -1,33 +1,8 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
-
-class PlayScreen extends StatelessWidget {
-  const PlayScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Play"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FilledButton(
-                onPressed: () async {
-                  await Navigator.pushNamed(context, "/normal");
-                },
-                child: Text("Normal")),
-            FilledButton(onPressed: () {}, child: Text("Ranked")),
-          ],
-        ),
-      ),
-    );
-  }
-}
+import "package:mathlympics/models.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
+import "package:mathlympics/auth/state.dart";
 
 class PlayNormal extends StatelessWidget {
   const PlayNormal({
@@ -36,6 +11,7 @@ class PlayNormal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = UserState.of(context).user;
     return Scaffold(
       body: Stack(
         children: [
@@ -63,12 +39,20 @@ class PlayNormal extends StatelessWidget {
               children: [
                 FilledButton(
                     onPressed: () async {
-                      await Navigator.pushNamed(context, "/normal/cal20");
+                      await Navigator.pushNamed(context, "/normal/cal20",
+                          arguments: {
+                            "userID": user?.id,
+                            "mode": Mode.cal20,
+                          });
                     },
                     child: Text("Calculation x20")),
                 FilledButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/normal/integrals");
+                    onPressed: () async {
+                      await Navigator.pushNamed(context, "/normal/integrals",
+                          arguments: {
+                            "userID": user?.id,
+                            "mode": Mode.integ10,
+                          });
                     },
                     child: Text("Integrals")),
               ],

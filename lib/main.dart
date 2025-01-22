@@ -116,12 +116,11 @@ class _MyAppState extends State<MyApp> {
               }
               return Leaderboard(userId: user!.id);
             },
-            "/play": (context) => const PlayScreen(),
             "/normal": (context) => const PlayNormal(),
             "/ranked": (context) => const PlayRanked(),
-            "/normal/cal20": (context) => const NormalGameScreen(),
-            "/normal/integrals": (context) =>
-                const NormalGameScreen(isIntegral: true),
+            //"/normal/cal20": (context) => const NormalGameScreen(),
+            // "/normal/integrals": (context) =>
+            //     const NormalGameScreen(isIntegral: true),
             "/login": (context) => const LoginPage(),
             "/register": (context) => const RegisterPage(),
             "/confirm-email": (context) => const ConfirmEmail(),
@@ -137,6 +136,18 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(
                 builder: (context) {
                   return GameOverScreen(finalTime: args["finalTime"]);
+                },
+              );
+            }
+            if (settings.name == "/normal/cal20" ||
+                settings.name == "/normal/integrals") {
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return NormalGameScreen(
+                    userID: args["userID"],
+                    mode: args["mode"],
+                  );
                 },
               );
             }

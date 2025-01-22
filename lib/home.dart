@@ -262,21 +262,40 @@ class _ProfileSectionState extends State<ProfileSection> {
   }
 }
 
-class ButtonSection extends StatelessWidget {
+class ButtonSection extends StatefulWidget {
   const ButtonSection({
     required this.label,
     super.key,
     required this.user,
   });
-
   final String label;
   final User? user;
+
+  @override
+  State<ButtonSection> createState() => _ButtonSection();
+}
+
+class _ButtonSection extends State<ButtonSection> {
+  late UserModel data;
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    if (widget.user != null) {
+      data = (await supabase.from("users").select().eq("id", widget.user!.id))
+          .map((hashMap) => UserModel.fromJson(hashMap))
+          .single;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     VoidCallback handleClick(String path) => () async {
           if (path == "/leaderboard" || path == "/ranked") {
-            if (user == null) {
+            if (widget.user == null) {
               path = "/login";
             }
           }
@@ -311,7 +330,7 @@ class ButtonSection extends StatelessWidget {
             height: 80,
             child: Center(
               child: Text(
-                label,
+                widget.label,
                 style: globalStyles.font.title,
               ),
             ),
