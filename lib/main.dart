@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:mathlympics/auth/state.dart";
-import "package:mathlympics/leaderboard.dart";
+import "package:mathlympics/leaderboard/leaderboard.dart";
 import "package:mathlympics/auth/login.dart";
 import "package:mathlympics/auth/register.dart";
 import "package:mathlympics/models.dart";
@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       listener = stateListener;
+      user = supabase.auth.currentUser;
     });
   }
 
@@ -107,14 +108,19 @@ class _MyAppState extends State<MyApp> {
             "/": (context) => Home(
                   title: "Mathlympics",
                   logo: Logos.appLogo(),
+                  //id: 0,
                 ),
-            "/leaderboard": (context) => const Leaderboard(userId: 0),
-            "/play": (context) => const PlayScreen(),
+            "/leaderboard": (context) {
+              if (user == null) {
+                return const RegisterPage();
+              }
+              return Leaderboard(userId: user!.id);
+            },
             "/normal": (context) => const PlayNormal(),
             "/ranked": (context) => const PlayRanked(),
-            "/normal/cal20": (context) => const NormalGameScreen(),
-            "/normal/integrals": (context) =>
-                const NormalGameScreen(isIntegral: true),
+            //"/normal/cal20": (context) => const NormalGameScreen(),
+            // "/normal/integrals": (context) =>
+            //     const NormalGameScreen(isIntegral: true),
             "/login": (context) => const LoginPage(),
             "/register": (context) => const RegisterPage(),
             "/confirm-email": (context) => const ConfirmEmail(),
@@ -130,6 +136,18 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(
                 builder: (context) {
                   return GameOverScreen(finalTime: args["finalTime"]);
+                },
+              );
+            }
+            if (settings.name == "/normal/cal20" ||
+                settings.name == "/normal/integrals") {
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return NormalGameScreen(
+                    userID: args["userID"],
+                    mode: args["mode"],
+                  );
                 },
               );
             }

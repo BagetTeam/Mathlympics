@@ -1,16 +1,20 @@
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "dart:async";
+import "package:mathlympics/models.dart";
 
 class NormalGameScreen extends StatefulWidget {
-  const NormalGameScreen({super.key, this.isIntegral = false});
-  final bool isIntegral;
+  const NormalGameScreen({super.key, this.userID, required this.mode});
+  final String? userID;
+  final Mode mode;
 
   @override
   State<StatefulWidget> createState() => _NormalGameScreen();
 }
 
 class _NormalGameScreen extends State<NormalGameScreen> {
+  final questionState = QuestionState();
+
   List<List<Offset>> lines = [];
   List<String> eqArithmetics = [
     "", //keep this
@@ -48,6 +52,8 @@ class _NormalGameScreen extends State<NormalGameScreen> {
     "∫ sec(x) dx = __",
     "" //keep this
   ];
+  int? questionLength;
+  List<String>? questionList;
 
   Timer? _timer;
   double _time = 0;
@@ -58,6 +64,17 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   void initState() {
     super.initState();
     startChronometer();
+    getQuestionList();
+  }
+
+  void getQuestionList() {
+    if (widget.mode == Mode.cal20) {
+      questionLength = eqArithmetics.length - 3;
+      questionList = eqArithmetics;
+    } else if (widget.mode == Mode.integ10) {
+      questionLength = eqIntegrals.length - 3;
+      questionList = eqIntegrals;
+    }
   }
 
   void startChronometer() {
@@ -82,24 +99,86 @@ class _NormalGameScreen extends State<NormalGameScreen> {
         point.dy <= size.height;
   }
 
-  void equationIndexIncrement() {
-    setState(() async {
-      idx++;
-      if (idx >=
-          (widget.isIntegral
-              ? eqIntegrals.length - 3
-              : eqArithmetics.length - 3)) {
-        idx = 0;
-        _timer?.cancel();
-        // Save the final time to a global variable or a service
-        // For example, using a global variable:
-        finalTime = _time;
-        await Navigator.pushNamed(context, "/game-over", arguments: {
-          "finalTime": _time,
-        });
-        //should finish the game
+  Future<void> updateScores(String userId, Mode mode, double newScore) async {
+    String modeName = mode.name;
+    bool timed = false;
+    int mult = 1;
+    if (RegExp(r"time\d+").hasMatch(modeName)) {
+      timed = true;
+      mult = -1;
+    }
+
+    final currentLeaderboardData = await supabase
+        .from("leaderboard")
+        .select()
+        .eq("uid", userId)
+        .eq("mode", modeName)
+        .maybeSingle();
+
+    final currentTopScoreData = await supabase
+        .from("top_scores")
+        .select()
+        .eq("uid", userId)
+        .eq("mode", modeName)
+        .order("score", ascending: timed);
+    int numberOfTopScores = currentTopScoreData.length;
+
+    if (numberOfTopScores < 5) {
+      await supabase.from("top_scores").insert({
+        "uid": userId,
+        "mode": modeName,
+        "score": newScore,
+      });
+    } else {
+      final worstScoreData = currentTopScoreData
+          .map((hashMap) => TopScoresModel.fromJson(hashMap))
+          .first;
+
+      if (worstScoreData.score * mult > newScore * mult) {
+        await supabase
+            .from("top_scores")
+            .update({"score": newScore})
+            .eq("uid", userId)
+            .eq("mode", modeName)
+            .eq("score", worstScoreData.score);
       }
-    });
+    }
+
+    if (currentLeaderboardData == null) {
+      await supabase.from("leaderboard").insert({
+        "uid": userId,
+        "mode": modeName,
+        "score": newScore,
+      });
+    } else if (currentLeaderboardData["score"] * mult > newScore * mult) {
+      await supabase
+          .from("leaderboard")
+          .update({"score": newScore})
+          .eq("uid", userId)
+          .eq("mode", modeName);
+    }
+  }
+
+  Future<void> equationIndexIncrement() async {
+    if (questionState.idx + 1 >= questionLength!) {
+      questionState.resetIdx();
+      _timer?.cancel();
+      finalTime = _time;
+      // Handle async operations after setState
+      if (widget.userID != null) {
+        await Navigator.pushNamed(context, "/game-over", arguments: {
+          "finalTime": finalTime,
+        }).then((_) => updateScores(widget.userID!, widget.mode, finalTime));
+      } else {
+        await Navigator.pushNamed(context, "/game-over", arguments: {
+          "finalTime": finalTime,
+        });
+      }
+    } else {
+      setState(() {
+        questionState.incrementIdx();
+      });
+    }
   }
 
   @override
@@ -112,47 +191,15 @@ class _NormalGameScreen extends State<NormalGameScreen> {
             children: [
               // math questions side ------------------------------
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.isIntegral
-                            ? eqIntegrals[idx]
-                            : eqArithmetics[idx],
-                        style: globalStyles.font.equations,
-                      ),
-                      Text(
-                        widget.isIntegral
-                            ? eqIntegrals[idx + 1]
-                            : eqArithmetics[idx + 1],
-                        style: globalStyles.font.equations,
-                      ),
-                      //highlighted equation
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 157, 225,
-                              244), //maybe change to a set colour from our styles
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          widget.isIntegral
-                              ? eqIntegrals[idx + 2]
-                              : eqArithmetics[idx + 2],
-                          style: globalStyles.font.equations,
-                        ),
-                      ),
-                      Text(
-                        widget.isIntegral
-                            ? eqIntegrals[idx + 3]
-                            : eqArithmetics[idx + 3],
-                        style: globalStyles.font.equations,
-                      ),
-                    ],
-                  ),
+                child: ListenableBuilder(
+                  listenable: questionState,
+                  builder: (context, child) {
+                    return QuestionList(
+                      mode: widget.mode,
+                      questionState: questionState,
+                      questionList: questionList!,
+                    );
+                  },
                 ),
               ),
 
@@ -307,4 +354,78 @@ class DrawingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(DrawingPainter oldDelegate) => true;
+}
+
+class QuestionState extends ChangeNotifier {
+  int _idx = 0;
+
+  int get idx => _idx;
+
+  void incrementIdx() {
+    _idx++;
+    notifyListeners();
+  }
+
+  void resetIdx() {
+    _idx = 0;
+    notifyListeners();
+  }
+}
+
+class QuestionList extends StatefulWidget {
+  const QuestionList({
+    super.key,
+    required this.mode,
+    required this.questionState,
+    required this.questionList,
+  });
+  final List<String> questionList;
+  final Mode mode;
+  final QuestionState questionState;
+
+  @override
+  State<StatefulWidget> createState() => _QuestionList();
+}
+
+class _QuestionList extends State<QuestionList> {
+  // Remove the local idx variable and use widget.questionState.idx instead
+
+  @override
+  Widget build(BuildContext context) {
+    // Use widget.questionState.idx to access the current index
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            widget.questionList[widget.questionState.idx],
+            style: globalStyles.font.equations,
+          ),
+          Text(
+            widget.questionList[widget.questionState.idx + 1],
+            style: globalStyles.font.equations,
+          ),
+          //highlighted equation
+          Container(
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 157, 225,
+                  244), //maybe change to a set colour from our styles
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              widget.questionList[widget.questionState.idx + 2],
+              style: globalStyles.font.equations,
+            ),
+          ),
+          Text(
+            widget.questionList[widget.questionState.idx + 3],
+            style: globalStyles.font.equations,
+          ),
+        ],
+      ),
+    ); // Your widget tree
+  }
 }

@@ -30,7 +30,42 @@ class UserModel {
 }
 
 @JsonEnum()
-enum Mode { cal20, cal50, time30, time60, integ10, integ30, summ }
+enum Mode {
+  cal20,
+  cal50,
+  time30,
+  time60,
+  algeb10,
+  algeb30,
+  integ10,
+  integ30,
+  summ
+}
+
+extension ModeExtension on Mode {
+  String get name {
+    switch (this) {
+      case Mode.cal20:
+        return "cal20";
+      case Mode.cal50:
+        return "cal50";
+      case Mode.time30:
+        return "time30";
+      case Mode.time60:
+        return "time60";
+      case Mode.algeb10:
+        return "algeb10";
+      case Mode.algeb30:
+        return "algeb30";
+      case Mode.integ10:
+        return "integ10";
+      case Mode.integ30:
+        return "integ30";
+      case Mode.summ:
+        return "summ";
+    }
+  }
+}
 
 @JsonSerializable()
 class TopScoresModel {
