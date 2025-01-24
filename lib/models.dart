@@ -31,6 +31,7 @@ class UserModel {
 
 @JsonEnum()
 enum Mode {
+  ranked,
   cal20,
   cal50,
   time30,
@@ -45,6 +46,8 @@ enum Mode {
 extension ModeExtension on Mode {
   String get name {
     switch (this) {
+      case Mode.ranked:
+        return "ranked";
       case Mode.cal20:
         return "cal20";
       case Mode.cal50:
@@ -92,13 +95,13 @@ class LeaderboardModel {
 
   int id;
   String uid;
-  double topScore;
+  double score;
   Mode mode;
 
   LeaderboardModel(
       {required this.id,
       required this.uid,
-      required this.topScore,
+      required this.score,
       required this.mode});
 
   Json toJson() => _$LeaderboardModelToJson(this);

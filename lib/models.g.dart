@@ -50,7 +50,7 @@ LeaderboardModel _$LeaderboardModelFromJson(Map<String, dynamic> json) =>
     LeaderboardModel(
       id: (json['id'] as num).toInt(),
       uid: json['uid'] as String,
-      topScore: (json['topScore'] as num).toDouble(),
+      score: (json['score'] as num).toDouble(),
       mode: $enumDecode(_$ModeEnumMap, json['mode']),
     );
 
@@ -58,6 +58,6 @@ Map<String, dynamic> _$LeaderboardModelToJson(LeaderboardModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'uid': instance.uid,
-      'topScore': instance.topScore,
+      'score': instance.score,
       'mode': _$ModeEnumMap[instance.mode]!,
     };
