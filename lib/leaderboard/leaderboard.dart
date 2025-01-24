@@ -1,13 +1,9 @@
+import "dart:collection";
+
 import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:mathlympics/models.dart";
-
-enum NormalLevels {
-  RANKED,
-  CALCULATION20,
-  INTEGRAL,
-}
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key, required this.userId});
@@ -46,7 +42,7 @@ class _LeaderboardState extends State<Leaderboard>
     super.dispose();
   }
 
-  NormalLevels Selected = NormalLevels.RANKED;
+  Mode selectedMode = Mode.cal20;
   int selectedTabIndex = 0;
 
   @override
@@ -81,11 +77,12 @@ class _LeaderboardState extends State<Leaderboard>
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                            color: globalStyles.colors.black, size: 24),
-                        onPressed: () =>
-                            Navigator.popAndPushNamed(context, "/"),
-                      ),
+                          icon: Icon(Icons.arrow_back,
+                              color: globalStyles.colors.black, size: 24),
+                          onPressed: () {
+                            _LeaderboardListDisplay.clearCache();
+                            Navigator.popAndPushNamed(context, "/");
+                          }),
                       Expanded(
                         child: Text(
                           "Math Battle Leaderboard",
@@ -129,7 +126,7 @@ class _LeaderboardState extends State<Leaderboard>
                         Icons.military_tech,
                         () {
                           setState(() {
-                            Selected = NormalLevels.RANKED;
+                            selectedMode = Mode.ranked;
                           });
                         },
                       ),
@@ -139,17 +136,27 @@ class _LeaderboardState extends State<Leaderboard>
                         Icons.calculate,
                         () {
                           setState(() {
-                            Selected = NormalLevels.CALCULATION20;
+                            selectedMode = Mode.cal20;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      _buildSidebarButton(
+                        "Cal x50",
+                        Icons.calculate,
+                        () {
+                          setState(() {
+                            selectedMode = Mode.cal50;
                           });
                         },
                       ),
                       SizedBox(height: 10),
                       _buildSidebarButton(
-                        "Integral",
+                        "Integral x10",
                         Icons.functions,
                         () {
                           setState(() {
-                            Selected = NormalLevels.INTEGRAL;
+                            selectedMode = Mode.integ10;
                           });
                         },
                       ),
@@ -222,12 +229,16 @@ class _LeaderboardState extends State<Leaderboard>
                           },
                           children: [
                             LeaderboardListDisplay(
+                              key: ValueKey(selectedMode),
                               title: titles[0],
                               userID: widget.userId,
+                              mode: selectedMode,
                             ),
                             LeaderboardListDisplay(
+                              key: ValueKey(selectedMode),
                               title: titles[1],
                               userID: widget.userId,
+                              mode: selectedMode,
                             ),
                           ],
                         ),
@@ -248,19 +259,21 @@ class _LeaderboardState extends State<Leaderboard>
     IconData icon,
     VoidCallback onPressed,
   ) {
-    NormalLevels buttonType;
+    Mode buttonType;
     switch (text) {
       case "Ranked":
-        buttonType = NormalLevels.RANKED;
+        buttonType = Mode.ranked;
       case "Cal x20":
-        buttonType = NormalLevels.CALCULATION20;
-      case "Integral":
-        buttonType = NormalLevels.INTEGRAL;
+        buttonType = Mode.cal20;
+      case "Cal x50":
+        buttonType = Mode.cal50;
+      case "Integral x10":
+        buttonType = Mode.integ10;
       default:
-        buttonType = NormalLevels.RANKED;
+        buttonType = Mode.ranked;
     }
 
-    Color buttonColor = Selected == buttonType
+    Color buttonColor = selectedMode == buttonType
         ? globalStyles.colors.secondary // Selected color
         : globalStyles.colors.primary;
 
@@ -349,39 +362,111 @@ class LeaderboardListDisplay extends StatefulWidget {
   const LeaderboardListDisplay({
     super.key,
     required this.userID,
-    required this.title, //temp
+    required this.title,
+    required this.mode,
   });
   final String userID;
-  final String title; //TEMPORARY
+  final String title;
+  final Mode mode;
 
   @override
   State<LeaderboardListDisplay> createState() => _LeaderboardListDisplay();
 }
 
 class _LeaderboardListDisplay extends State<LeaderboardListDisplay> {
-  String? username;
-  int? userLevel;
+  static final Map<String, _LeaderboardCacheData> _leaderboardCache = {};
 
+  Iterable<LeaderboardModel> leaderboardScore = [];
+  late LeaderboardModel? userScore;
+  Map<String, String> _usernameMap = {};
   @override
   void initState() {
     super.initState();
     _loadUserData();
   }
 
-  Future<void> _loadUserData() async {
-    final global_data = (await supabase.from("top_scores").select())
-        .map((hashMap) => TopScoresModel.fromJson(hashMap));
+  static void clearCache() {
+    _leaderboardCache.clear();
   }
 
+  Future<void> _loadUserData() async {
+    String modeName = widget.mode.name;
+
+    if (_leaderboardCache.containsKey(modeName)) {
+      final cachedData = _leaderboardCache[modeName]!;
+      setState(() {
+        leaderboardScore = cachedData.leaderboardScore;
+        _usernameMap = cachedData.usernameMap;
+        userScore = cachedData.userScore;
+      });
+      return;
+    }
+    final userData = (await supabase
+        .from("leaderboard")
+        .select()
+        .eq("mode", modeName)
+        .eq("uid", widget.userID));
+    final leaderboardData = (await supabase
+        .from("leaderboard")
+        .select()
+        .eq("mode", modeName)
+        .order("score", ascending: true)
+        .limit(25));
+
+    final userIds = leaderboardData.map((e) => e["uid"]).toSet().toList();
+    List<dynamic> usernames = [];
+    if (userIds.isNotEmpty) {
+      usernames = await supabase.from("users").select("id, displayName");
+    }
+    final usernameMap = {
+      for (var user in usernames)
+        user["id"] as String: user["displayName"] as String
+    };
+    final processedLeaderboardScore =
+        leaderboardData.map((hashMap) => LeaderboardModel.fromJson(hashMap));
+
+    // Cache the fetched data
+    _leaderboardCache[modeName] = _LeaderboardCacheData(
+      leaderboardScore: processedLeaderboardScore,
+      usernameMap: usernameMap,
+      userScore: userData
+          .map((hashMap) => LeaderboardModel.fromJson(hashMap))
+          .firstOrNull,
+    );
+
+    setState(() {
+      userScore = userData
+          .map((hashMap) => LeaderboardModel.fromJson(hashMap))
+          .firstOrNull;
+      leaderboardScore = processedLeaderboardScore;
+      //leaderboardData.map((hashMap) => LeaderboardModel.fromJson(hashMap));
+      _usernameMap = usernameMap;
+    });
+  }
+
+  Future<String?> getTopUserName(String userId) async {
+    final response = await supabase
+        .from("users")
+        .select("displayName")
+        .eq("id", userId)
+        .single();
+
+    return response["displayName"] as String;
+  }
+
+  //TODO ADD CACHING -> at least for swithicng tabs
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      itemCount: 25,
+      itemCount: leaderboardScore.length > 25 ? 25 : leaderboardScore.length,
       itemBuilder: (BuildContext context, index) {
         final int displayIndex = index + 1;
+        final topUserData = leaderboardScore.elementAt(index);
+        print("${topUserData.uid} \n\n\n\n\n\n\n\n\n");
+        final topUserName = _usernameMap[topUserData.uid] ?? "Unknown User";
 
-        Color containerColor;
+        final Color containerColor;
         String? medalIcon;
         if (displayIndex == 1) {
           containerColor = const Color.fromARGB(255, 255, 222, 122);
@@ -445,14 +530,14 @@ class _LeaderboardListDisplay extends State<LeaderboardListDisplay> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.title,
+                        topUserName,
                         style: globalStyles.font.normal,
                       ),
                       Text(
-                        "Time: 0.00001s",
+                        "Time: ${topUserData.score}",
                         style: TextStyle(
                             color: const Color.fromARGB(255, 83, 103, 113)),
-                      )
+                      ),
                     ],
                   )
                 ]),
@@ -463,4 +548,16 @@ class _LeaderboardListDisplay extends State<LeaderboardListDisplay> {
       },
     );
   }
+}
+
+class _LeaderboardCacheData {
+  final Iterable<LeaderboardModel> leaderboardScore;
+  final Map<String, String> usernameMap;
+  final LeaderboardModel? userScore;
+
+  _LeaderboardCacheData({
+    required this.leaderboardScore,
+    required this.usernameMap,
+    required this.userScore,
+  });
 }
