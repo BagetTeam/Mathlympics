@@ -39,7 +39,7 @@ class GameOverScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "You got nothing right.",
+                  "You got everything right. Anouk are the best",
                   style: globalStyles.font.header
                       .copyWith(color: globalStyles.colors.secondary),
                 ),

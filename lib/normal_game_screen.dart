@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:mathlympics/global_styles.dart";
 import "dart:async";
 import "package:mathlympics/models.dart";
+import 'dart:ui' as ui;
+import "classifier.dart";
 
 class NormalGameScreen extends StatefulWidget {
   const NormalGameScreen({super.key, this.userID, required this.mode});
@@ -15,7 +17,12 @@ class NormalGameScreen extends StatefulWidget {
 class _NormalGameScreen extends State<NormalGameScreen> {
   final questionState = QuestionState();
 
+  final classifier = Classifier();
   List<List<Offset>> lines = [];
+  int strokes = 0;
+  final pointMode = ui.PointMode.points;
+  int? digit;
+
   List<String> eqArithmetics = [
     "", //keep this
     "", //keep this
@@ -89,6 +96,64 @@ class _NormalGameScreen extends State<NormalGameScreen> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> processDrawing() async {
+    if (lines.isEmpty) return;
+
+    // Flatten the last stroke into a single list of points
+    final points = lines.last;
+    if (points.isEmpty) return;
+
+    try {
+      // Get prediction for the drawn digit
+      print("AIHDGBWIDUAIWDB \n\n\n\n\n\n\n AHDGUIWHADA");
+      digit = await classifier.classifyDrawing(points);
+
+      // Check if the digit matches the expected answer
+      final currentQuestion = questionList![questionState.idx + 2];
+      final expectedAnswer = extractExpectedAnswer(currentQuestion);
+      print(
+          "\n\n\n\n\n " + currentQuestion + expectedAnswer + digit.toString());
+
+      if (digit.toString() == expectedAnswer) {
+        await equationIndexIncrement();
+        setState(() {
+          lines.clear();
+          digit = null;
+        });
+      }
+    } catch (e) {
+      print('Error classifying drawing: $e');
+    }
+  }
+
+  String extractExpectedAnswer(String question) {
+    // Extract the expected answer from questions like "2 x 6 = __"
+    final parts = question.split('=');
+    if (parts.length != 2) return '';
+
+    final expression = parts[0].trim();
+    try {
+      // Evaluate the expression
+      // Note: This is a simplified version. You'll need a proper expression evaluator
+      if (expression.contains('x')) {
+        final numbers =
+            expression.split('x').map((s) => int.parse(s.trim())).toList();
+        return (numbers[0] * numbers[1]).toString();
+      } else if (expression.contains('/')) {
+        final numbers =
+            expression.split('/').map((s) => int.parse(s.trim())).toList();
+        return (numbers[0] ~/ numbers[1]).toString();
+      } else if (expression.contains('+')) {
+        final numbers =
+            expression.split('+').map((s) => int.parse(s.trim())).toList();
+        return (numbers[0] + numbers[1]).toString();
+      }
+    } catch (e) {
+      print('Error evaluating expression: $e');
+    }
+    return '';
   }
 
   // check bounds of drawing
@@ -246,6 +311,12 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                                       });
                                     }
                                   },
+                                  onPanEnd: (DragEndDetails details) async {
+                                    if (lines.isNotEmpty) {
+                                      await processDrawing();
+                                      setState(() {});
+                                    }
+                                  },
                                   child: CustomPaint(
                                     size: Size.infinite,
                                     painter: DrawingPainter(lines: lines),
@@ -262,15 +333,16 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                       Row(
                         children: [
                           const SizedBox(width: 20),
-                          Text(
-                            "Time: $_time",
-                            style: globalStyles.font.header,
-                          ),
+                          // Text(
+                          //   "Time: $_time",
+                          //   style: globalStyles.font.header,
+                          // ),
 
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
                                 lines.clear();
+                                digit = null;
                               });
                             },
                             style: ElevatedButton.styleFrom(
@@ -297,8 +369,9 @@ class _NormalGameScreen extends State<NormalGameScreen> {
                           ElevatedButton(
                             onPressed: () {
                               equationIndexIncrement();
+                              lines.clear();
                             },
-                            child: Text("+"),
+                            child: Text(digit.toString()),
                           ),
                         ],
                       ),
@@ -388,8 +461,6 @@ class QuestionList extends StatefulWidget {
 }
 
 class _QuestionList extends State<QuestionList> {
-  // Remove the local idx variable and use widget.questionState.idx instead
-
   @override
   Widget build(BuildContext context) {
     // Use widget.questionState.idx to access the current index
