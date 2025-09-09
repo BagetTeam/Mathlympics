@@ -4,6 +4,7 @@ import "package:flutter/scheduler.dart";
 import "package:mathlympics/auth/state.dart";
 import "package:mathlympics/global_styles.dart";
 import "package:mathlympics/models.dart";
+import "package:mathlympics/update_score.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class Home extends StatefulWidget {
@@ -192,6 +193,8 @@ class _ProfileSectionState extends State<ProfileSection> {
 
   @override
   Widget build(BuildContext context) {
+    User? user = UserState.of(context).user;
+
     return Container(
       height: double.infinity,
       color: const Color.fromARGB(224, 171, 227, 255),
@@ -235,12 +238,8 @@ class _ProfileSectionState extends State<ProfileSection> {
               ElevatedButton(
                   // FIX: just for testing, to be removed
                   onPressed: () async {
-                    var data = (await supabase.from("users").select())
-                        .map((d) => UserModel.fromJson(d));
-
-                    for (var usr in data) {
-                      print(usr.toJson());
-                    }
+                    if (user == null) return;
+                    await updateScores(user.id, "cal20", 0.5);
                   },
                   child: Text("Settings")),
               ElevatedButton(
